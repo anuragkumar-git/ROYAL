@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <conio.h>
-#include <stdlib.h>
-#include <dos.h>
+
 
 void main() {
     int boxX = 40, boxY = 20, candyX1 = 40, candyY1 = 3, candyX2, candyY2;
