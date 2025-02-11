@@ -9,7 +9,7 @@ export const Tickets = () => {
     const [count, setCount] = useState(1)
   return (
     <div>
-      <div className="form">
+      <form>
         <h1>Tickets</h1>
         <div>
           <label>Name</label>
@@ -32,7 +32,7 @@ export const Tickets = () => {
           <label>Persons</label>
           <input type="number" min={1} max={6} defaultValue={1} onChange={(e)=>{setCount(e.target.value)}}/> {count}
         </div>
-      </div>
+      </form>
     </div>
   );
 };
