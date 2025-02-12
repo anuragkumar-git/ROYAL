@@ -29,13 +29,16 @@ export const Navbar = () => {
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <Link class="nav-link" to="/home">
-                Home 
+                Home
               </Link>
             </li>
             <li class="nav-item">
-            <Link class="nav-link" to="/deals">
+              <Link class="nav-link" to="/deals">
                 Deals
               </Link>
+            </li>
+            <li>
+              <Link class="nav-link" to="/login">Login</Link>
             </li>
           </ul>
         </div>

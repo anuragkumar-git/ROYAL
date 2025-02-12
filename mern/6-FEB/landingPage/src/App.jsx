@@ -12,6 +12,8 @@ import { Home } from './components/tukku/Home'
 import { Deals } from './components/tukku/Deals'
 import { Error } from './components/tukku/Error'
 import { Landing } from './components/tukku/Landing'
+import { View } from './components/tukku/View'
+import { Login } from './components/forms/Login'
 
 function App() {
 
@@ -27,6 +29,8 @@ function App() {
             <Route path= '/*' element = {<Error/>}></Route>
             <Route path='/home' element = {<Home/>}></Route>
             <Route path='/deals' element = {<Deals/>}></Route>
+            <Route path='/deals/:id' element={<View/>}></Route>
+            <Route path='/login' element={<Login/>}></Route>
         </Routes>
       </div>
   )
