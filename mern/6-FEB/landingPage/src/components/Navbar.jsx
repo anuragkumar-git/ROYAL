@@ -40,6 +40,12 @@ export const Navbar = () => {
             <li>
               <Link class="nav-link" to="/login">Login</Link>
             </li>
+            <li>
+              <Link class="nav-link" to="/signup">Signup</Link>
+            </li>
+            <li>
+              <Link class="nav-link" to="/schedule">Schedule</Link>
+            </li>
           </ul>
         </div>
       </nav>
