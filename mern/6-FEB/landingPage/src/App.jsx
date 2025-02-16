@@ -16,6 +16,8 @@ import { View } from "./components/tukku/View";
 import { Login } from "./components/forms/Login";
 import { Signup } from "./components/tukku/Signup";
 import { Schedule } from "./components/tukku/Schedule";
+import { Demo14 } from "./components/forms/Demo14";
+import { Demo14f } from "./components/forms/Demo14f";
 
 function App() {
   return (
@@ -34,6 +36,8 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/schedule" element={<Schedule />}></Route>
+        <Route path="/demo14" element={<Demo14/>}></Route>
+        <Route path="/demo14f" element={<Demo14f/>}></Route>
       </Routes>
     </div>
   );
