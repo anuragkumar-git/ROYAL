@@ -42,7 +42,7 @@ export const Login = () => {
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col-12 col-md-8 col-lg-6 col-xl-5">
             <div
-              class="card bg-dark text-white"
+              class="card text-white"
               style={{ borderRadius: "1rem" }}
             >
               <div class="card-body p-5">

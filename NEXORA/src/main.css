@@ -9,3 +9,10 @@ background: #eee;
 .error{
  color: rgba(213, 16, 16, 0.859);
 }
+.card{
+    background-color: #1F1C2C;
+}
+
+.navbar{
+    background-color: #182078;
+}
