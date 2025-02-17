@@ -18,6 +18,7 @@ import { Signup } from "./components/tukku/Signup";
 import { Schedule } from "./components/tukku/Schedule";
 import { Demo14 } from "./components/forms/Demo14";
 import { Demo14f } from "./components/forms/Demo14f";
+import { Apidemo1 } from "./components/apis/Apidemo1";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
         <Route path="/schedule" element={<Schedule />}></Route>
         <Route path="/demo14" element={<Demo14/>}></Route>
         <Route path="/demo14f" element={<Demo14f/>}></Route>
+        <Route path="/api" element={<Apidemo1></Apidemo1>}></Route>
       </Routes>
     </div>
   );
