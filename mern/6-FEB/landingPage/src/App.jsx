@@ -19,6 +19,9 @@ import { Schedule } from "./components/tukku/Schedule";
 import { Demo14 } from "./components/forms/Demo14";
 import { Demo14f } from "./components/forms/Demo14f";
 import { Apidemo1 } from "./components/apis/Apidemo1";
+import { Search } from "./components/movies/Search";
+import { MovieDetail } from "./components/movies/MovieDetail";
+import { Photos } from "./components/movies/Photos";
 
 function App() {
   return (
@@ -37,9 +40,12 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/schedule" element={<Schedule />}></Route>
-        <Route path="/demo14" element={<Demo14/>}></Route>
-        <Route path="/demo14f" element={<Demo14f/>}></Route>
+        <Route path="/demo14" element={<Demo14 />}></Route>
+        <Route path="/demo14f" element={<Demo14f />}></Route>
         <Route path="/api" element={<Apidemo1></Apidemo1>}></Route>
+        <Route path="/searchMovie" element={<Search />}></Route>
+        <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
+        <Route path="/photos/:id" element={<Photos />}></Route>
       </Routes>
     </div>
   );

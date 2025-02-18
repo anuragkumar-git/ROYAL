@@ -9,7 +9,7 @@ export const Apidemo1 = () => {
 
   const usersData = async () => {
     try {
-      const res = await axios.get("https://node5.onrender.com/user/use");
+      const res = await axios.get("https://node5.onrender.com/user/user");
       console.log(res.data.data);
       console.log(res.data.message);
       setusers(res.data.data);
