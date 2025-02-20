@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 export const MovieDetail = () => {
@@ -14,15 +14,22 @@ export const MovieDetail = () => {
 
   // };
   const getDetail = async () => {
-    console.log(id);
-
-    const res = await axios.get(
-      `http://www.omdbapi.com/?apikey=49616d12&i=${id}`
-    );
-    console.log(res.data);
-    setdetail(res.data);
-    setshowDetail(true);
+    try {
+      console.log(id);
+      const res = await axios.get(
+        `http://www.omdbapi.com/?apikey=49616d12&i=${id}`
+      );
+      console.log(res.data);
+      setdetail(res.data);
+      setshowDetail(true);
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  useEffect(() => {
+    getDetail();
+  }, []);
 
   const navigate = useNavigate();
   return (
@@ -160,7 +167,7 @@ export const MovieDetail = () => {
         </div>
       )}
 
-      {!showDetail ? (
+      {/* {!showDetail ? (
         setTimeout(() => {
           getDetail();
           setshowDetail(true);
@@ -173,6 +180,17 @@ export const MovieDetail = () => {
         // >
         //   detail
         // </button>
+        <button
+          className="mt-3 mb-5"
+          onClick={() => {
+            // window.location.replace("/searchMovie"); //reloads the page
+            navigate("/searchMovie");
+          }}
+        >
+          Go Back
+        </button>
+      )} */}
+      {showDetail && (
         <button
           className="mt-3 mb-5"
           onClick={() => {

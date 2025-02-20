@@ -1,12 +1,14 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const Apidemo1 = () => {
   const [message, setmessage] = useState("");
   const [users, setusers] = useState([]);
   const [showData, setshowData] = useState(false);
   const [errorMsg, seterrorMsg] = useState("");
-
+  useEffect(()=>{
+    usersData()
+  }, [])
   const usersData = async () => {
     try {
       const res = await axios.get("https://node5.onrender.com/user/user");
@@ -79,13 +81,13 @@ export const Apidemo1 = () => {
       Default Values:
       showData = false, (empty)
       errorMsg = "" = false */}
-      {!showData && !errorMsg ? ( //false->true && false->true = true(call api) |Calling API
+      {/* {!showData && !errorMsg ? ( //false->true && false->true = true(call api) |Calling API
         <button onClick={usersData}>Call API</button>
       ) : errorMsg && !showData ? ( //true && false->true = true(retry) | API failed
         <button onClick={usersData}>Retry</button>
       ) : (
         <button onClick={refreshPage}>Refresh</button> //API succeed
-      )}
+      )} */}
     </div>
   );
 };

@@ -22,6 +22,7 @@ import { Apidemo1 } from "./components/apis/Apidemo1";
 import { Search } from "./components/movies/Search";
 import { MovieDetail } from "./components/movies/MovieDetail";
 import { Photos } from "./components/movies/Photos";
+import { PostForm } from "./components/apis/PostForm";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route path="/searchMovie" element={<Search />}></Route>
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route path="/photos/:id" element={<Photos />}></Route>
+        <Route path="/postform" element={<PostForm/>}></Route>
       </Routes>
     </div>
   );

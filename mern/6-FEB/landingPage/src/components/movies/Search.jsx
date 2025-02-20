@@ -5,12 +5,21 @@ import { Link } from "react-router-dom";
 export const Search = () => {
   const [query, setquery] = useState("");
   const [search, setsearch] = useState([]);
+  const [error, seterror] =useState("");
   const movieData = async () => {
-    const res = await axios.get(
-      `http://www.omdbapi.com/?i=tt3896198&apikey=49616d12&s=${query}`
-    );
-    console.log(res.data);
-    setsearch(res.data.Search);
+    try {
+      const res = await axios.get(
+        `http://www.omdbapi.com/?apikey=49616d1&s=${query}`
+      );
+      console.log("Data:",res.data);
+      setsearch(res.data.Search);
+      console.log("Error:",res.data.Error);
+      seterror(res.data.Error)
+
+    } catch (err) {
+      console.log("errors:",err);
+      seterror(err.message)
+    }
   };
 
   return (
@@ -46,7 +55,9 @@ export const Search = () => {
             onChange={(e) => {
               setquery(e.target.value);
             }}
-            onKeyDown={(e)=>{e.key == "Enter" && (movieData())}}
+            onKeyDown={(e) => {
+              e.key == "Enter" && movieData();
+            }}
           />
           <button
             className="btn btn-outline-primary"

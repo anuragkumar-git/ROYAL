@@ -58,6 +58,9 @@ export const Navbar = () => {
             <li>
               <Link className="nav-link" to="/searchMovie">Movies</Link>
             </li>
+            <li>
+              <Link className="nav-link" to="/postform">Post Form</Link>
+            </li>
           </ul>
         </div>
       </nav>
