@@ -75,6 +75,7 @@ export const Signup = () => {
                           id="name"
                           aria-describedby="emailHelp"
                           placeholder="Enter your name"
+                          autoFocus
                         />
                         <span class="error">{errors.name?.message}</span>
                       </div>
@@ -92,7 +93,6 @@ export const Signup = () => {
                           id="exampleInputEmail1"
                           aria-describedby="emailHelp"
                           placeholder="Enter email"
-                          autoFocus
                         />
                         <span className="error">{errors.email?.message}</span>
                       </div>
