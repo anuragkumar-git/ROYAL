@@ -47,10 +47,10 @@ export const Login = () => {
             >
               <div class="card-body p-5">
                 <div class="mb-md-5 mt-md-4 pb-5">
-                  <form onSubmit={handleSubmit(submitHandler)}>
                     <h2 class="fw-bold mb-2 text-uppercase text-center">
                       Login
                     </h2>
+                  <form onSubmit={handleSubmit(submitHandler)}>
                     <div class="form-group">
                       <label
                         class="form-label text-start"

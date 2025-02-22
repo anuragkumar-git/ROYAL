@@ -56,10 +56,10 @@ export const Navbar = () => {
               <Link class="nav-link" to="/api">API</Link>
             </li>
             <li>
-              <Link className="nav-link" to="/searchMovie">Movies</Link>
+              <Link className="nav-link" to="/postform">Post Form</Link>
             </li>
             <li>
-              <Link className="nav-link" to="/postform">Post Form</Link>
+              <Link className="nav-link" to="/searchMovie">Movies</Link>
             </li>
           </ul>
         </div>
