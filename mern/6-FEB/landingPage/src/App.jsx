@@ -23,6 +23,7 @@ import { Search } from "./components/movies/Search";
 import { MovieDetail } from "./components/movies/MovieDetail";
 import { Photos } from "./components/movies/Photos";
 import { PostForm } from "./components/apis/PostForm";
+import { Asur } from "./components/apis/Asur";
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
         <Route path="/moviedetail/:id" element={<MovieDetail />}></Route>
         <Route path="/photos/:id" element={<Photos />}></Route>
         <Route path="/postform" element={<PostForm/>}></Route>
+        <Route path="/asur" element={<Asur/>}></Route>
       </Routes>
     </div>
   );
