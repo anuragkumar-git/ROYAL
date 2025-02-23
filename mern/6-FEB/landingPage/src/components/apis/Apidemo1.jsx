@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { toast, Bounce, ToastContainer } from "react-toastify";
+import { toast, Slide, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
+import { OrbitProgress } from "react-loading-indicators";
 
 export const Apidemo1 = () => {
   const [message, setmessage] = useState("");
@@ -18,6 +19,17 @@ export const Apidemo1 = () => {
       const res = await axios.get("https://node5.onrender.com/user/user");
       console.log(res.data.data);
       console.log(res.data.message);
+      // toast.success(`${res.data.message}`, {
+      //   position: "top-left",
+      //   autoClose: 100,
+      //   hideProgressBar: true,
+      //   closeOnClick: false,
+      //   pauseOnHover: false,
+      //   draggable: true,
+      //   progress: undefined,
+      //   theme: "dark",
+      //   transition: Slide,
+      // });
       setusers(res.data.data);
       setmessage(res.data.message);
       setshowData(true);
@@ -54,18 +66,51 @@ export const Apidemo1 = () => {
         `https://node5.onrender.com/user/user/${id}`
       );
       console.log("deleteapi", res);
+      console.log("users:", users);
+      let delName;
+      const dName = users.map((user) => {
+        if (user._id == id) {
+          delName = user.name;
+          return delName;
+        }
+      });
+      console.log("dName:", dName);
+      console.log("delName:", delName);
+
+      res.status == 204 &&
+        toast.error(`${delName} Deleted.`, {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Slide,
+        });
       usersData();
     } catch (error) {
       console.log(error);
-      
     }
-
-
   };
 
   return (
-    <div>
-      <h1>API1</h1>
+    <>
+      <ToastContainer
+        className="mt-5"
+        position="top-right"
+        autoClose={500}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Slide}
+      />
       {/* {errorMsg && <><p style={{color:"red"}}>{errorMsg}</p></>} */}
 
       {/* {!showData ? (
@@ -142,7 +187,15 @@ export const Apidemo1 = () => {
       */}
       {!showData && !errorMsg ? ( //false->true && false->true = true(call api) |Calling API
         <>
-          <p>Loading</p>
+          <div className="mt-5 mx-auto">
+            <OrbitProgress
+              variant="dotted"
+              color="#32cd32"
+              size="large"
+              text=""
+              textColor=""
+            />
+          </div>
         </>
       ) : errorMsg && !showData ? ( //true && false->true = true(retry) | API failed
         <>
@@ -159,8 +212,23 @@ export const Apidemo1 = () => {
         showData &&
         !errorMsg && (
           <>
+            <h1>Users Detail</h1>
             <p style={{ color: "green" }}>{message}</p>
-            <table class="table">
+            {/* <ToastContainer
+              className="mt-5"
+              position="top-right"
+              autoClose={500}
+              hideProgressBar
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="dark"
+              transition={Slide}
+            /> */}
+            <table class="table ">
               <thead>
                 <tr>
                   <th>Name</th>
@@ -199,9 +267,7 @@ export const Apidemo1 = () => {
               })}
             </table>
             <Link to={"/postform"}>
-              <button className="mb-3">
-                Add Data
-              </button>
+              <button className="mb-3">Add Data</button>
             </Link>
             {/* <button
                 onClick={() => {
@@ -213,6 +279,6 @@ export const Apidemo1 = () => {
           </>
         )
       )}
-    </div>
+    </>
   );
 };
