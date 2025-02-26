@@ -26,10 +26,10 @@ const getUserById = async (req, res) => {
 
 const delUserById = async (req, res) =>{
     // const delUserbyId = await userModel.findOneAndDelete(req.params.id)
-    const delUserbyId = await userModel.findOneAndDelete(req.params.id)
+    await userModel.findOneAndDelete(req.params.id)
     res.json({
         msg:"User Deleted",
-        res:delUserbyId
+        // res:delUserbyId
     })
 }
 module.exports = { addUsers, getAllUser, getUserById, delUserById }
