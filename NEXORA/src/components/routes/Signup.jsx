@@ -1,6 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const Signup = () => {
   const {
@@ -9,10 +10,23 @@ export const Signup = () => {
     formState: { errors },
   } = useForm();
 
+  const navigate = useNavigate();
   // console.log("Serr:", errors);
-  const dataHandler = (data) => {
-    console.log("Signup:", data);
-    
+  const dataHandler = async (data) => {
+    try {
+      // console.log(data);
+      const res = await axios.post("/signup", data);
+      // console.log(data);
+      if (res.status === 201) {
+        // console.log("data submitted");
+        navigate("/login");
+      } //else {
+      //   console.log("failed");
+      // }
+    } catch (error) {
+      console.error("Error Response:", error.response?.data || error.message);
+    }
+    // console.log("Signup:", data);
   };
 
   const signupValidationSchema = {
@@ -36,17 +50,16 @@ export const Signup = () => {
         message: "Provide a valid email*",
       },
     },
-    passwordValidator:{
-      required:{
-        value:true,
-        message:"Create a password*"
+    passwordValidator: {
+      required: {
+        value: true,
+        message: "Create a password*",
       },
-      minLength:{
-        value:6,
-        message: "Minimum 6 character required*"
-      }
-    }
-
+      minLength: {
+        value: 6,
+        message: "Minimum 6 character required*",
+      },
+    },
   };
   return (
     <>
@@ -54,10 +67,7 @@ export const Signup = () => {
         <div class="container py-5 h-100">
           <div class="row d-flex justify-content-center align-items-center h-100">
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-              <div
-                class="card text-white"
-                style={{ borderRadius: "1rem" }}
-              >
+              <div class="card text-white" style={{ borderRadius: "1rem" }}>
                 <div class="card-body p-5">
                   <div class="mb-md-5 mt-md-4 pb-5">
                     <form onSubmit={handleSubmit(dataHandler)}>
@@ -69,7 +79,12 @@ export const Signup = () => {
                           Name
                         </label>
                         <input
-                          {...register("name", signupValidationSchema.nameValidator)}
+                          {...register(
+                            "name",
+                            signupValidationSchema.nameValidator
+                          )}
+                          autocomplete
+                          autoFocus
                           type="text"
                           class="form-control"
                           id="name"
@@ -86,13 +101,16 @@ export const Signup = () => {
                           Email
                         </label>
                         <input
-                          {...register("email", signupValidationSchema.emailValidator)}
+                          {...register(
+                            "email",
+                            signupValidationSchema.emailValidator
+                          )}
                           type="email"
                           class="form-control"
                           id="exampleInputEmail1"
                           aria-describedby="emailHelp"
                           placeholder="Enter email"
-                          autoFocus
+                          autocomplete
                         />
                         <span className="error">{errors.email?.message}</span>
                       </div>
@@ -101,13 +119,18 @@ export const Signup = () => {
                           Password
                         </label>
                         <input
-                          {...register("password", signupValidationSchema.passwordValidator)}
+                          {...register(
+                            "password",
+                            signupValidationSchema.passwordValidator
+                          )}
                           type="password"
                           class="form-control "
                           id="exampleInputPassword1"
                           placeholder="Password"
                         />
-                        <span className="error">{errors.password?.message}</span>
+                        <span className="error">
+                          {errors.password?.message}
+                        </span>
                       </div>
 
                       <div class="text-center">

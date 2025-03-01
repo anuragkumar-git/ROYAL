@@ -5,17 +5,20 @@ import { Home } from "./components/routes/Home";
 import { Error } from "./components/routes/Error";
 import { Login } from "./components/routes/Login";
 import { Signup } from "./components/routes/Signup";
+import axios from "axios";
 function App() {
+  axios.defaults.baseURL = "http://localhost:3000";
+
   return (
     <>
       <Navbar></Navbar>
 
       <Routes>
-        <Route path="/" element={<Home/>} ></Route>
-        <Route path="/home" element={<Home/>} ></Route>
-        <Route path="/*" element={<Error/>}></Route>
-        <Route path="/login" element={<Login/>}></Route>
-        <Route path="/signup" element={<Signup/>}></Route>
+        <Route path="/" element={<Home />}></Route>
+        <Route path="/home" element={<Home />}></Route>
+        <Route path="/*" element={<Error />}></Route>
+        <Route path="/login" element={<Login />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
       </Routes>
     </>
   );

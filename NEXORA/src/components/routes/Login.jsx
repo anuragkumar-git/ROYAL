@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 export const Login = () => {
   const {
@@ -8,9 +9,17 @@ export const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const submitHandler = (data) => {
-    console.log(data);
+  const navigate = useNavigate();
+  const submitHandler = async (data) => {
+    try {
+      const getUser = await axios.post("/login", data);
+      getUser.status === 200
+        ? navigate("/") && console.log("data submitted")
+        : console.log("failed");
+    } catch (error) {
+      console.error("Error Response:", error.response?.data || error.message);
+    }
+    // console.log(data);
   };
 
   const loginValidationSchema = {
@@ -41,15 +50,10 @@ export const Login = () => {
       <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-            <div
-              class="card text-white"
-              style={{ borderRadius: "1rem" }}
-            >
+            <div class="card text-white" style={{ borderRadius: "1rem" }}>
               <div class="card-body p-5">
                 <div class="mb-md-5 mt-md-4 pb-5">
-                    <h2 class="fw-bold mb-2 text-uppercase text-center">
-                      Login
-                    </h2>
+                  <h2 class="fw-bold mb-2 text-uppercase text-center">Login</h2>
                   <form onSubmit={handleSubmit(submitHandler)}>
                     <div class="form-group">
                       <label
@@ -77,7 +81,10 @@ export const Login = () => {
                         Password
                       </label>
                       <input
-                        {...register("password", loginValidationSchema.passwordValidator)}
+                        {...register(
+                          "password",
+                          loginValidationSchema.passwordValidator
+                        )}
                         type="password"
                         class="form-control "
                         id="exampleInputPassword1"
