@@ -14,8 +14,9 @@ export const Login = () => {
     try {
       const getUser = await axios.post("/login", data);
       getUser.status === 200
-        ? navigate("/") && console.log("data submitted")
-        : console.log("failed");
+        // ? navigate("/skeleton") && console.log("data submitted")
+        ? navigate("/skeleton") && alert("logged in")
+        : alert("logged in failed");
     } catch (error) {
       console.error("Error Response:", error.response?.data || error.message);
     }

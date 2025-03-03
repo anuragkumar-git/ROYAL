@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Navbar = () => {
   return (
     <div>
-      <nav class="navbar navbar-expand-lg navbar-dark ">
+      <nav class="navbar navbar-expand-lg navbar-dark w-100 ">
         <Link class="nav-link navbar-brand" to="/">
           NEXORA
         </Link>
@@ -37,6 +37,11 @@ export const Navbar = () => {
                 Signup
               </Link>
             </li>
+            {/* <li>
+              <Link class="nav-link" to="/skeleton">
+                Skeleton
+              </Link>
+            </li> */}
           </ul>
         </div>
       </nav>

@@ -12,17 +12,26 @@ export const Signup = () => {
 
   const navigate = useNavigate();
   // console.log("Serr:", errors);
+
   const dataHandler = async (data) => {
     try {
       // console.log(data);
       const res = await axios.post("/signup", data);
+      console.log(res);
+
       // console.log(data);
       if (res.status === 201) {
         // console.log("data submitted");
         navigate("/login");
-      } //else {
-      //   console.log("failed");
-      // }
+        alert("Account created");
+        // } else if (res.status === 409 ) {
+        //   alert("user exsist")
+        //   console.log("user exsist");
+        //   navigate("/");
+        //   console.log(res.status);
+      } else {
+        console.log(res.status);
+      }
     } catch (error) {
       console.error("Error Response:", error.response?.data || error.message);
     }

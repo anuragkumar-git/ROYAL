@@ -6,6 +6,8 @@ import { Error } from "./components/routes/Error";
 import { Login } from "./components/routes/Login";
 import { Signup } from "./components/routes/Signup";
 import axios from "axios";
+import { Products } from "./components/routes/Products";
+import Skeleton from "./components/routes/Skeleton";
 function App() {
   axios.defaults.baseURL = "http://localhost:3000";
 
@@ -19,6 +21,7 @@ function App() {
         <Route path="/*" element={<Error />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/skeleton" element={<Skeleton/>}></Route>
       </Routes>
     </>
   );

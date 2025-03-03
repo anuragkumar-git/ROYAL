@@ -11,6 +11,10 @@ const userSignUpSchema = new Schema({
     },
     password: {
         type: String
+    },
+    role:{
+        type:Schema.Types.ObjectId,
+        ref:"roles"
     }
 })
 
