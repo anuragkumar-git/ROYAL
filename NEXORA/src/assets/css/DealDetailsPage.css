@@ -1,0 +1,34 @@
+/* src/assets/css/DealDetailsPage.css */
+.deal-image {
+    border-radius: 12px;
+  }
+  
+  .vendor-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  
+  .deal-header h1 {
+    font-weight: bold;
+  }
+  
+  .deal-description h4,
+  .deal-description h5 {
+    margin-top: 20px;
+  }
+  
+  .deal-actions .btn {
+    min-width: 150px;
+  }
+  
+  .deal-insights {
+    border-top: 1px solid #ccc;
+    padding-top: 15px;
+  }
+  
+  .deal-stats {
+    margin-top: 10px;
+    color: #555;
+  }
+  

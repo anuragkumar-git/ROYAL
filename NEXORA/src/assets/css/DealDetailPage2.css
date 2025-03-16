@@ -1,0 +1,19 @@
+/* DealDetailPage.css */
+.deal-title {
+    font-size: 2rem;
+    color: #928DAB; /* Grayish Lavender */
+  }
+  
+  .price {
+    font-size: 1.5rem;
+    color: #1F1C2C; /* Deep Purple */
+  }
+  
+  .deal-actions button {
+    transition: 0.3s;
+  }
+  
+  .deal-actions button:hover {
+    opacity: 0.8;
+  }
+  

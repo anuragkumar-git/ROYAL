@@ -1,0 +1,21 @@
+/* BusinessDashboard.css */
+h2 {
+    color: #928dab; /* Grayish Lavender */
+  }
+  
+  .card h5 {
+    font-weight: 600;
+  }
+  
+  .table thead {
+    background: #1f1c2c; /* Deep Purple/Black */
+  }
+  
+  .btn {
+    transition: 0.3s;
+  }
+  
+  .btn:hover {
+    opacity: 0.9;
+  }
+  

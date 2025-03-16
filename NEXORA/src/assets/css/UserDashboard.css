@@ -1,0 +1,33 @@
+/* src/assets/css/Dashboard.css */
+
+.dashboard-container {
+    max-width: 1200px;
+  }
+  
+  .dashboard-header img.user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #6c757d;
+  }
+  
+  .list-group-item {
+    cursor: pointer;
+  }
+  
+  .list-group-item.active {
+    background-color: #6f42c1;
+    border-color: #6f42c1;
+    color: white;
+  }
+  
+  .deal-item, .review-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  h3 {
+    border-bottom: 2px solid #6f42c1;
+    padding-bottom: 5px;
+  }
+  

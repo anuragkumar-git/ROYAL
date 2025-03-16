@@ -20,15 +20,15 @@ export const Signup = () => {
       console.log(res);
 
       // console.log(data);
-      if (res.status === 201) {
+      if (res.status === 409) {
         // console.log("data submitted");
-        navigate("/login");
-        alert("Account created");
-        // } else if (res.status === 409 ) {
-        //   alert("user exsist")
+        alert("user already exsist");
+        navigate("/");
         //   console.log("user exsist");
-        //   navigate("/");
         //   console.log(res.status);
+      } else if (res.status === 201 || res.status === 200) {
+        alert("Account created");
+        navigate("/login");
       } else {
         console.log(res.status);
       }
@@ -78,7 +78,7 @@ export const Signup = () => {
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card text-white" style={{ borderRadius: "1rem" }}>
                 <div class="card-body p-5">
-                  <div class="mb-md-5 mt-md-4 pb-5">
+                  <div class="mb-md-2 mt-md-2 pb-2">
                     <form onSubmit={handleSubmit(dataHandler)}>
                       <h2 class="fw-bold mb-2 text-uppercase text-center">
                         Signup
@@ -150,10 +150,18 @@ export const Signup = () => {
                           Submit
                         </button>
                       </div>
+                      
                       <div class="text-center">
                         <p class="mb-0">
                           Already have an account?{" "}
                           <Link to="/login">Login</Link>
+                        </p>
+                      </div>
+
+                      <div class="text-center">
+                        <p class="mb-0">
+                          Register as Business Owner?{" "}
+                          <Link to="/businessregistration">Register</Link>
                         </p>
                       </div>
                     </form>

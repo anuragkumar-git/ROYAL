@@ -1,39 +1,46 @@
+const roleModel = require('../models/roleModel')
 const userSignUpModel = require('../models/userModel')
 const bcrypt = require('bcrypt')
 
 const addUsers = async (req, res) => {
     try {
-        const role = "67c534ab5e7d4f04eb538ddf"
-        const salt = await bcrypt.genSalt(10);
-        const email = req.body.email
+
+        const { name, email, password } = req.body
+
+        const emailExsit = await userSignUpModel.findOne({ email })
         // console.log(email);
-
-        const hashedPasssward = await bcrypt.hash(req.body.password, salt)
-        // console.log(hashedPasssward);
-
-        req.body.password = hashedPasssward
-        req.body.role = role
-
-        const emailExsit = await userSignUpModel.findOne({ email: email })
-        // console.log("email:", emailExsit);
-
         if (emailExsit) {
-            // return (res.status(200).json({
+            // console.error(`❌ ${email} already exsits`);
+
             return (res.status(409).json({
-                // res.status(409).json({
-                msg: "user Already exsist",
+                msg: `❌ ${email} already exsits`,
                 data: emailExsit
             })
             )
-        } else {
-            // return res.status(404).json({ msg: 'use not found' })
-            const adduser = await userSignUpModel.create(req.body)
-            res.status(201).json({
-                msg: "user Created",
-                // status: res.status,
-                // data: adduser
-            })
         }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPasssward = await bcrypt.hash(password, salt)
+
+        const userRole = await roleModel.findOne({ role: "user" })
+        if (!userRole) { return res.status(500).json({ msg: "User role not found" }) }
+        // console.log(userRole);
+
+        // const adduser = await userSignUpModel.create(req.body)
+        const adduser = await userSignUpModel.create({
+            name, email, password: hashedPasssward, role: {
+                id: userRole._id,
+                desc: userRole.role
+            }
+        })
+        console.log(`✔️ ${email} created`);
+
+        res.status(201).json({
+            msg: "user Created",
+            // status: res.status,
+            // data: adduser
+        })
+
         // // console.log(req.body, adduser);
     } catch (err) {
         res.send(`Adduser: ${err}`)
@@ -44,7 +51,7 @@ const addUsers = async (req, res) => {
 const findUser = async (req, res) => {
     try {
         const { email, password } = req.body
-        const finduser = await userSignUpModel.findOne({ email: email })
+        const finduser = await userSignUpModel.findOne({ email })
         if (finduser) {
 
             // res.status(200).json({ msg: `user Found` })

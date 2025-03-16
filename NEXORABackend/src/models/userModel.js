@@ -12,13 +12,18 @@ const userSignUpSchema = new Schema({
     password: {
         type: String
     },
-    role:{
-        type:Schema.Types.ObjectId,
-        ref:"roles"
+    role: {
+        id: {
+            type: Schema.Types.ObjectId,
+            ref: "roles"
+        },
+        desc: {
+            type: String
+        }
     }
 })
 
 // const userSignUpModel = mongoose.model("userSignUp", userSignUpSchema)
 // module.exports = userSignUpModel 
 
-module.exports = mongoose.model("userSignUp", userSignUpSchema)
+module.exports = mongoose.model("userSignUps", userSignUpSchema)
