@@ -1,10 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../assets/css/HomePage.css";
 // import DealDetailsPage from "./DealDetailsPage";
 
 export const Home = () => {
-  // const navigate = Navigate()
   const images = [
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpwNzN4W5DEjpatX1OVW1x2dJNuqam3FoAYA&s",
     "https://cdn.dribbble.com/userupload/29769579/file/original-dcb98ce800f0dff04b54930e780c1493.png?resize=400x0",
@@ -126,9 +125,11 @@ export const Home = () => {
             </li>
           </ul>
           <div className="text-center mt-4">
-            <button className="btn btn-primary btn-lg">
-              Join Tukku Today!
-            </button>
+            <Link to={"/signup"}>
+              <button className="btn btn-primary btn-lg">
+                Join Tukku Today!
+              </button>
+            </Link>
           </div>
         </section>
 

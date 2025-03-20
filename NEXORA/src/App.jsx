@@ -32,7 +32,7 @@ function App() {
 
       <Routes>
         {/* <Route path="/" element={<HomePage/>}></Route> */}
-        <Route path="/" element={<LandingPage />}></Route>
+        <Route path="/" element={<Home />}></Route>
         {/* <Route path="/" element={<Home />}></Route> */}
         <Route path="/home" element={<Home />}></Route>
         <Route path="/*" element={<Error />}></Route>
@@ -46,11 +46,11 @@ function App() {
           element={<BusinessRegistration />}
         ></Route>
         <Route path="/userdashboard" element={<UserDashboard />}></Route>
-        <Route path="/deal/:id" element={<DealDetailPage2 />} />
+        {/* <Route path="/deal/:id" element={<DealDetailPage2 />} /> */}
         <Route path="/businessdashboard" element={<BusinessDashboard />} />
         <Route path="/adddeal" element={<AddDealForm />} />
         <Route path="/addad" element={<AddAdvertisement />} />
-        <Route path="/businessdashboard2" element={<BusinessDashboard2 />} />
+        {/* <Route path="/businessdashboard2" element={<BusinessDashboard2 />} /> */}
         {/* <Route path="/admin" element={<AdminDashboard />} ></Route> */}
         <Route path="/admin/*" element={<AdminDashboard />} />
         {/* <Route path="/admin/dashboardowerview" element={<DashboardOverview />} />

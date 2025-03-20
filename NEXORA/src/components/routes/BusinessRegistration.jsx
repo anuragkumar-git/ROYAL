@@ -124,14 +124,14 @@ const BusinessRegistration = () => {
         <div className="row ">
           <div className="col-md-4">
             <ul className="list-group">
-              <li className="list-group-item active">Restaurant Information</li>
+              <li className="list-group-item">Restaurant Information</li>
               <li className="list-group-item">Menu and Operational Details</li>
             </ul>
           </div>
-          <form onSubmit={handleSubmit(submithandler)}>
-            {step === 1 && (
-              <>
-                <div className=" card col-md-8">
+          <div className=" card col-md-5">
+            <form onSubmit={handleSubmit(submithandler)}>
+              {step === 1 && (
+                <>
                   <h2 className="text-center">Complete your registration</h2>
                   <div className="card business-cards mt-2">
                     <h4>Restaurant Information</h4>
@@ -297,54 +297,54 @@ const BusinessRegistration = () => {
                       Next
                     </button>
                   </div>
-                </div>
-              </>
-            )}
-            {step === 2 && (
-              <>
-                {/* Menu and Operational Details Form */}
-                <div className="card business-cards mt-2">
-                  <h4>Menu and Operational Details</h4>
+                </>
+              )}
+              {step === 2 && (
+                <>
+                  {/* Menu and Operational Details Form */}
+                  <div className="card business-cards mt-2">
+                    <h4>Menu and Operational Details</h4>
 
-                  <label>Menu Type</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    {...register("menuType")}
-                  />
-                  {/* <span className="error">{errors.menuType?.message}</span> */}
+                    <label>Menu Type</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      {...register("menuType")}
+                    />
+                    {/* <span className="error">{errors.menuType?.message}</span> */}
 
-                  <label>Operational Hours</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="e.g., 9:00 AM - 10:00 PM"
-                    {...register("operationalHours")}
-                  />
-                  {/* <span className="error">
+                    <label>Operational Hours</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="e.g., 9:00 AM - 10:00 PM"
+                      {...register("operationalHours")}
+                    />
+                    {/* <span className="error">
                   {errors.operationalHours?.message}
                 </span> */}
-                </div>
+                  </div>
 
-                {/* Navigation Buttons */}
-                <div className="text-center">
-                  <button
-                    type="button"
-                    className="btn btn-secondary my-2 mx-2"
-                    onClick={() => setStep(1)}
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    className="btn btn-outline-light btn-lg my-2"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </>
-            )}
-          </form>
+                  {/* Navigation Buttons */}
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      className="btn btn-secondary my-2 mx-2"
+                      onClick={() => setStep(1)}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      className="btn btn-outline-light btn-lg my-2"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </>
+              )}
+            </form>
+          </div>
         </div>
       </div>
     </>
