@@ -13,8 +13,6 @@ const addbussinesses = async (req, res) => {
     const mapAddress = `${streetAdress} ${city} ${pincode} ${landmark}`
 
 
-    // https://maps.googleapis.com/maps/api/geocode/json?address=Chandrashekhar%20Aazad%20Nagar,%20Sector%206%20Gandhinagar%20382006&key=AIzaSyDho0lp8UmNjyZLGulu-CcBJ6gKuKVMK_w
-    // const mapaddress = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${mapAddress}&key=AIzaSyDho0lp8UmNjyZLGulu-CcBJ6gKuKVMK_w`)
     //* const mapaddress = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${mapAddress}&key=${GOOGLE_MAP_API_KEY}`)
     // console.log('Orignal:',mapAddress);
 
