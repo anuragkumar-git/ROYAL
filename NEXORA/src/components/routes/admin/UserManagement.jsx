@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Form, InputGroup, Container } from 'react-bootstrap';
 import { FaSearch, FaEye, FaTrash, FaUserSlash, FaUserCheck, FaRedo } from 'react-icons/fa';
+import '../../../assets/css/UserManagement.css'
 
 const UserManagement = () => {
   // Simulated user data (Replace with API call in real implementation)
@@ -60,8 +61,9 @@ const UserManagement = () => {
       <h2 className="my-4">User Management</h2>
 
       {/* Search & Filter Controls */}
-      <InputGroup className="mb-3">
-        <Form.Control
+      <InputGroup className="mb-3 row">
+        <Form.Control 
+        className='col-md-6'
           type="text"
           placeholder="Search by name or email..."
           value={searchTerm}
@@ -82,7 +84,7 @@ const UserManagement = () => {
       </InputGroup>
 
       {/* Users Table */}
-      <Table striped bordered hover responsive>
+      <Table className='table'striped bordered hover responsive>
         <thead>
           <tr>
             <th>#</th>

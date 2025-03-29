@@ -1,0 +1,171 @@
+:root {
+  --primary-color: #132eb9;
+  --secondary-color: #7979f0;
+  --background-color: #1f1c2c;
+  --text-color: #f9f6ea;
+  --card-bg-color: #1f1f1f;
+}
+
+body {
+  /* margin: 0; */
+  font-family: "Poppins", sans-serif;
+  /* background-color: var(--background-color); */
+  background-color: #1f1c2c;
+  
+  /* color: var(--text-color); */
+  /* color: #1f1c2c; */
+}
+
+.landing-page {
+  padding: 40px 5%;
+}
+
+/* Header Section */
+.header-section {
+  text-align: center;
+  margin-bottom: 50px;
+  
+}
+
+/* h1 {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  color: var(--card-bg-color);
+} */
+
+#heading {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  /* gap: 10px; */
+}
+.search-input {
+  width: 400px;
+  padding: 10px;
+  border-radius: 20px 0 0 20px;
+  border: 1px solid var(--secondary-color);
+}
+
+.searchinput[type="text"] {
+  padding: 12px;
+  width: 60%;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--card-bg-color);
+  color: var(--text-color);
+}
+
+.page-button {
+  /* padding: 12px 24px; */
+  background: linear-gradient(
+    145deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.hr {
+  border-bottom: 2px solid #6f42c1;
+  padding-bottom: 5px;
+}
+/* Section Styling */
+
+.deal-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.deal-card {
+  background-color: var(--card-bg-color);
+  padding: 10px;
+  border-radius: 11px;
+  transition: transform 0.3s ease;
+}
+
+.deal-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.card-hr {
+  border-bottom: 2px solid #636363;
+  padding-bottom: 5px;
+}
+.deal-offer {
+  display: block;
+  font-size: 14px;
+  margin: 8px 0;
+  color: var(--secondary-color);
+}
+.claim-btn {
+  /* background-color: #6a1b9a; */
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 20px;
+  /* background-color: var(--primary-color); */
+  background: linear-gradient(
+    145deg,
+    var(--secondary-color),
+    var(--primary-color)
+  );
+  border: none;
+}
+/* Map Section */
+.map-container iframe {
+  width: 100%;
+  height: 400px;
+  border-radius: 12px;
+}
+
+/* Why Choose Section */
+
+.why-li {
+  color: var(--background-color);
+  background-color: #dddddd;
+  /* border-radius: 12px; */
+}
+
+.join-btn,
+.search-btn {
+  color: #fff;
+  padding: 10px 20px;
+  background-color: var(--primary-color);
+  /* background-color:#132eb9; */
+  border: none;
+  border-radius: 0 20px 20px 0;
+}
+
+.claim-btn,
+.join-btn,
+.search-btn:hover {
+  /* background-color: var(--primary-color); */
+  /* background: #4a148c; */
+  border: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  input[type="text"] {
+    width: 100%;
+  }
+
+  .page-button {
+    padding: 12px 18px;
+  }
+}

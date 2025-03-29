@@ -1,0 +1,80 @@
+/* AddDealForm.css */
+
+.add-deal-form {
+    /* background-color: #b3e5e5; */
+    background-color: #799cf0;
+    border-radius: 12px;
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    color: #1f1c2c;
+  }
+  
+  p {
+    color: #2a2929;
+  }
+  
+  .form-label {
+    font-weight: 600;
+  }
+  
+  .form-control, .form-select {
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .form-control-file{
+    background-color: rgba(0, 0, 0, 0.05);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+  }
+  .form-check-input {
+    cursor: pointer;
+  }
+  
+  .form-check-label {
+    margin-left: 8px;
+    cursor: pointer;
+  }
+  
+  .add-deal{ 
+    /* background-color: #6a1b9a; */
+    /* border: none; */
+    /* color: #fff; */
+    /* padding: 14px; */
+    /* border-radius: 8px; */
+    /* font-size: 16px; */
+    cursor: pointer;
+  }
+  
+  .add-deal:hover {
+    /* background-color: #4a148c; */
+  }
+  
+  a {
+    color: #6a1b9a;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  .text-center {
+    margin-top: 16px;
+  }
+  
+  small {
+    color: #777;
+  }
+  
+  /* File Input */
+  input[type='file'] {
+    cursor: pointer;
+  }

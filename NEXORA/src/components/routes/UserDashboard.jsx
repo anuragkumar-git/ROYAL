@@ -39,30 +39,30 @@ const UserDashboard = () => {
         <div className="col-md-3">
           <div className="list-group">
             <button
-              className={`list-group-item ${activeTab === 'profile' && 'active'}`}
+              className={` mt-3 list-group-item ${activeTab === 'profile' && 'active'}`}
               onClick={() => setActiveTab("profile")}
             >
               <FaUser className="me-2" /> Profile
             </button>
             <button
-              className={`list-group-item ${activeTab === 'savedDeals' && 'active'}`}
+              className={` mt-3 list-group-item ${activeTab === 'savedDeals' && 'active'}`}
               onClick={() => setActiveTab("savedDeals")}
             >
               <FaHeart className="me-2" /> Saved Deals
             </button>
             <button
-              className={`list-group-item ${activeTab === 'history' && 'active'}`}
+              className={`mt-3 list-group-item ${activeTab === 'history' && 'active'}`}
               onClick={() => setActiveTab("history")}
             >
               <FaHistory className="me-2" /> Review History
             </button>
             <button
-              className={`list-group-item ${activeTab === 'settings' && 'active'}`}
+              className={`mt-3 list-group-item ${activeTab === 'settings' && 'active'}`}
               onClick={() => setActiveTab("settings")}
             >
               <FaCog className="me-2" /> Settings
             </button>
-            <button className="list-group-item text-danger">
+            <button className=" my-3 list-group-item text-danger">
               <FaSignOutAlt className="me-2" /> Logout
             </button>
           </div>

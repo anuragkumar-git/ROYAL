@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import DealPreview from "./DealPreview";
+import { CCalendar } from "@coreui/react-pro";
 // import "bootstrap/dist/css/bootstrap.min.css";
 
 const AddDealForm = () => {
@@ -13,8 +14,8 @@ const AddDealForm = () => {
     startDate: "",
     endDate: "",
     recurring: false,
-    location: "",
-    multiLocation: false,
+    // location: "",
+    // multiLocation: false,
     originalPrice: "",
     discount: "",
     finalPrice: "",
@@ -36,11 +37,14 @@ const AddDealForm = () => {
 
     // Auto-calculate final price
     if (name === "originalPrice" || name === "discount") {
-      const discountPrice = value && name === "discount" ? value : deal.discount;
-      const originalPrice = value && name === "originalPrice" ? value : deal.originalPrice;
-      const finalPrice = originalPrice && discountPrice
-        ? originalPrice - (originalPrice * (discountPrice / 100))
-        : "";
+      const discountPrice =
+        value && name === "discount" ? value : deal.discount;
+      const originalPrice =
+        value && name === "originalPrice" ? value : deal.originalPrice;
+      const finalPrice =
+        originalPrice && discountPrice
+          ? originalPrice - originalPrice * (discountPrice / 100)
+          : "";
       setDeal((prev) => ({ ...prev, finalPrice }));
     }
   };
@@ -61,7 +65,6 @@ const AddDealForm = () => {
     <div className="container mt-5">
       <h2 className="mb-4">Add a New Deal</h2>
       <form onSubmit={handleSubmit} className="row g-4">
-
         {/* Deal Title */}
         <div className="col-md-6">
           <label className="form-label">Deal Title</label>
@@ -124,6 +127,14 @@ const AddDealForm = () => {
           </div>
         </div>
 
+        <label for="startDate">Birthday:</label>
+        <input
+          onChange={handleChange}
+          type="date"
+          id="startDate"
+          name="startDate"
+        />
+
         {/* Image Upload */}
         <div className="col-md-4">
           <label className="form-label">Deal Images</label>
@@ -183,15 +194,17 @@ const AddDealForm = () => {
 
         {/* Submission Controls */}
         <div className="col-12 d-flex gap-3">
-          <button type="submit" className="btn btn-primary">Publish Deal</button>
-          <button type="button" className="btn btn-secondary">Save as Draft</button>
+          <button type="submit" className="btn btn-primary">
+            Publish Deal
+          </button>
+          <button type="button" className="btn btn-secondary">
+            Save as Draft
+          </button>
         </div>
-
       </form>
 
       {/* Real-Time Deal Preview */}
       <DealPreview deal={deal} />
-
     </div>
   );
 };

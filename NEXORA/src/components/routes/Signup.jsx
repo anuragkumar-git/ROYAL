@@ -95,7 +95,7 @@ export const Signup = () => {
                           autocomplete
                           autoFocus
                           type="text"
-                          class="form-control"
+                          className="form-control"
                           id="name"
                           aria-describedby="emailHelp"
                           placeholder="Enter your name"

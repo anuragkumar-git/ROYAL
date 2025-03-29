@@ -1,0 +1,83 @@
+  :root {
+      --primary-color: #132EB9;
+      --secondary-color: #799CF0;
+      --background-color: #FFF8D4;
+      --text-color: #FFFEFA;
+    }
+    
+    body {
+      background-color: var(--background-color);
+      font-family: Arial, sans-serif;
+      color: var(--text-color);
+    }
+    
+    .navbar {
+      background-color: var(--primary-color);
+    }
+    
+    .nav-link, .navbar-brand {
+      color: var(--text-color);
+    }
+    
+    .search-bar {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+    }
+    
+    
+    
+    button {
+      /* padding: 10px 20px;
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+      border: none;
+      border-radius: 0 20px 20px 0; */
+    }
+    
+    button:hover {
+      
+    }
+    
+    .trending-deals, .quick-filters, .explore-deals, .why-choose {
+      margin: 40px 20px;
+    }
+    
+    .card {
+      background-color: var(--text-color);
+      color: #000;
+      border: 1px solid var(--secondary-color);
+    }
+    
+    .card-title {
+      color: var(--primary-color);
+    }
+    
+    .claim-btn {
+      background-color: var(--primary-color);
+      color: var(--text-color);
+    }
+    
+    .claim-btn:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    footer {
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      padding: 20px;
+      text-align: center;
+    }
+    
+    @media (max-width: 768px) {
+      input[type="text"] {
+        width: 100%;
+      }
+    
+      /* button {
+        width: 100%;
+        border-radius: 20px;
+        margin-top: 10px;
+      } */
+    }
+    

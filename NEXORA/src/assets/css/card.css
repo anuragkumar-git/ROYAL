@@ -1,0 +1,76 @@
+:root {
+    --primary-color: #132EB9;
+    --secondary-color: #799CF0;
+    --background-dark: #1E1E2F;
+    --card-bg: #2C2C3E;
+    --btn-color: #2E8B57;
+  }
+  
+  .deal-card {
+    position: relative;
+    width: 250px;
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: #fff;
+  }
+  
+  .card-icons {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+  }
+  
+  .save-icon, .share-icon {
+    font-size: 20px;
+    cursor: pointer;
+    pointer-events: all;
+    /* color: var(--secondary-color); */
+    color: #fff;
+  }
+  
+  .card-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .card-content {
+    padding: 16px;
+    text-align: center;
+  }
+  
+  .vendor-name {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  .deal-offer {
+    display: block;
+    font-size: 14px;
+    margin: 8px 0;
+    color: var(--secondary-color);
+  }
+  
+  .claim-deal-btn {
+    background-color: var(--btn-color);
+    color: rgb(255, 255, 255);
+    border: none;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .claim-deal-btn:hover {
+    background-color: #ff0000;
+  }
+  

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardCard from './DashboardCard';
 import { FaUsers, FaTags, FaClipboardCheck, FaExclamationTriangle, FaAdversal, FaChartBar } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 
 const DashboardOverview = () => {
   const [metrics, setMetrics] = useState({
@@ -17,7 +18,7 @@ const DashboardOverview = () => {
       mostViewedDeal: 'N/A',
     },
   });
-
+const navigate = useNavigate()
   // Simulate fetching data (replace with API calls)
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +50,9 @@ const DashboardOverview = () => {
       <h2 className="my-4">Admin Dashboard Overview</h2>
       <Row>
         <Col md={4}>
+        <Link to="/admin/users">
           <DashboardCard title="Total Users" value={metrics.totalUsers} icon={<FaUsers />} bg="bg-primary" />
+        </Link>
         </Col>
         <Col md={4}>
           <DashboardCard title="Active Deals" value={metrics.activeDeals} icon={<FaTags />} bg="bg-success" />
