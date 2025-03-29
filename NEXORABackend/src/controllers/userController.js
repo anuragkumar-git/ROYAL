@@ -1,119 +1,167 @@
-const roleModel = require('../models/roleModel')
-const userSignUpModel = require('../models/userModel')
-const bcrypt = require('bcrypt')
+// Import necessary modules
+const bcrypt = require('bcrypt'); // For password hashing
+const jwt = require('jsonwebtoken'); // For generating tokens
+const User = require('../models/userModel'); // Import User model
+require('dotenv').config(); // Load environment variables
+const blackListModel = require('../models/tokenBlacklistModel')
 
-const addUsers = async (req, res) => {
-    try {
+// User Registration Controller
+const registerUser = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
 
-        const { name, email, password } = req.body
-
-        const emailExsit = await userSignUpModel.findOne({ email })
-        // console.log(email);
-        if (emailExsit) {
-            // console.error(`❌ ${email} already exsits`);
-
-            return (res.status(409).json({
-                msg: `❌ ${email} already exsits`,
-                data: emailExsit
-            })
-            )
-        }
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPasssward = await bcrypt.hash(password, salt)
-
-        const userRole = await roleModel.findOne({ role: "user" })
-        if (!userRole) { return res.status(500).json({ msg: "User role not found" }) }
-        // console.log(userRole);
-
-        // const adduser = await userSignUpModel.create(req.body)
-        const adduser = await userSignUpModel.create({
-            name, email, password: hashedPasssward, role: {
-                id: userRole._id,
-                desc: userRole.role
-            }
-        })
-        console.log(`✔️ ${email} created`);
-
-        res.status(201).json({
-            msg: "user Created",
-            // status: res.status,
-            // data: adduser
-        })
-
-        // // console.log(req.body, adduser);
-    } catch (err) {
-        res.send(`Adduser: ${err}`)
-        console.log(err);
+    // Check if the email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email already exists' });
     }
+
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+    });
+
+    // Save user to the database
+    await newUser.save();
+
+    // Send success response
+    res.status(201).json({ message: 'User registered successfully', userId: newUser._id });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// User Login Controller
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Compare the entered password with the hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    // Generate JWT token for authentication
+    const token = jwt.sign(
+      { _id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } // Token expiration time
+    );
+    res.cookie('token', token)
+    // Send success response with token
+    res.status(200).json({ message: 'Login successful', token, role: user.role });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get User Profile Controller
+const getUserProfile = async (req, res) => {
+  try {
+
+    const userId = req.user._id; // Extract userId from the request after authentication
+
+    // Fetch user data excluding the password
+    const user = await User.findById(userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return user data
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Controller to update user profile
+const updateUserProfile = async (req, res) => {
+  try {
+    const userId = req.user._id; // Extract user ID from the authenticated token
+
+    const { name, email, password } = req.body;
+
+    // Find user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update user data
+    user.name = name || user.name;
+    user.email = email || user.email;
+
+    // Hash new password if provided
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    // Save updated user to database
+    const updatedUser = await user.save();
+
+    // Send success response
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      message: 'Profile updated successfully',
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Controller to delete user account
+const deleteUserAccount = async (req, res) => {
+  try {
+    const userId = req.user._id; // Extract user ID from token
+
+    // Find user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Delete user from database
+    await User.deleteOne({ _id: userId });
+    res.clearCookie('token');
+    res.status(200).json({ message: 'Account deleted successfully' });
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const logoutUser = async (req, res, next) => {
+  res.clearCookie('token');
+  // const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+  const token = req.headers.authorization?.split(' ')[1];
+  await blackListModel.create({ token })
+  res.status(200).json({ msg: "Logged out" })
 }
 
-const findUser = async (req, res) => {
-    try {
-        const { email, password } = req.body
-        const finduser = await userSignUpModel.findOne({ email })
-        if (finduser) {
-
-            // res.status(200).json({ msg: `user Found` })
-            const comparePass = await bcrypt.compare(password, finduser.password)
-
-            if (comparePass) {
-                res.status(200).json({ message: "Login success", data: finduser })
-                console.log(finduser);
-                // localStorage.setItem(user, finduser.email)
-            } else {
-                return (
-                    res.status(401).json({
-                        message: "Invalid credentials"
-                    }))
-            }
-        } else {
-            return res.status(404).json({ msg: 'use not found' })
-
-        }
-        // const encPass = finduser.password
-
-        // console.log(req.body, finduser.password);
-
-
-    } catch (error) {
-        // res.send("findUser: " + error)
-        res.status(500).json({ message: "Internal server error" });
-        console.log("findUser: " + error)
-    }
-}
-const getUsers = async (req, res) => {
-    try {
-        const getUser = await userSignUpModel.find()
-        res.json({
-            msg: "userFatched",
-            data: getUser
-        })
-    } catch (error) {
-        res.send(`getUsers: ${error}`)
-    }
-}
-
-const getUserByID = async (req, res) => {
-    try {
-        const getuserbyid = await userSignUpModel.findById(req.params.id)
-        res.json({
-            msg: "User Found",
-            data: getuserbyid
-        })
-    } catch (error) {
-        res.send(`getuserbyID: ${error}`)
-    }
-}
-
-const deleteUserById = async (req, res) => {
-    try {
-        const deleteuserbyid = await userSignUpModel.findOneAndDelete(req.params.id)
-        res.json({
-            msg: `${deleteuserbyid?.name} delted`
-        })
-    } catch (error) {
-        res.send(`delete user: ${error}`)
-    }
-}
-module.exports = { findUser, addUsers, getUsers, getUserByID, deleteUserById }
+// Export all controllers
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  deleteUserAccount,
+  logoutUser
+};
