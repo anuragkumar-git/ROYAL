@@ -4,8 +4,8 @@ const User = require('../models/userModel');
 
 // Middleware to authenticate business token
 const authenticateToken = async (req, res, next) => {
-    // Extract token from Authorization header
-    const token = req.headers.authorization?.split(' ')[1]; // Bearer <token>
+    // Extract token from cookies or Authorization header
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Bearer <token>
 
     if (!token) {
         return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
@@ -16,6 +16,7 @@ const authenticateToken = async (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // Check if the business exists
+        // const business = await Business.findById(decoded._id).populate('role'); //already in token
         const business = await Business.findById(decoded._id);
         if (!business) {
             return res.status(404).json({ success: false, message: 'Business not found' });
@@ -29,8 +30,8 @@ const authenticateToken = async (req, res, next) => {
     }
 };
 
-// const authorizeRole =(roles) => {
 
+// const authorizeRole =(roles) => {
 //     return (req, res, next) => {
 //         console.log(req.business);
 //       if (!roles.includes(req.business.role)) {

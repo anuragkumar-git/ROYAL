@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
     );
     res.cookie('token', token)
     // Send success response with token
-    res.status(200).json({ message: 'Login successful', token, role: user.role });
+    res.status(200).json({ message: 'Login successful', token, user,role: user.role });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -150,8 +150,8 @@ const deleteUserAccount = async (req, res) => {
 
 const logoutUser = async (req, res, next) => {
   res.clearCookie('token');
-  // const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+  // const token = req.headers.authorization?.split(' ')[1];
   await blackListModel.create({ token })
   res.status(200).json({ msg: "Logged out" })
 }

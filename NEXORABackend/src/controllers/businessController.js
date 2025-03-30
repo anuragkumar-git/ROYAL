@@ -73,7 +73,7 @@ const getBusinessProfile = async (req, res) => {
 const updateBusinessProfile = async (req, res) => {
   try {
     const businessId = req.business._id;
-    const { businessName, businessType, address } = req.body;
+    const { businessName, phone, address } = req.body;
 
     // Check if the business exists
     const business = await Business.findById(businessId);
@@ -83,7 +83,7 @@ const updateBusinessProfile = async (req, res) => {
 
     // Update fields if provided
     if (businessName) business.businessName = businessName;
-    if (businessType) business.businessType = businessType;
+    if (phone) business.phone = phone;
     if (address) business.address = address;
 
     await business.save();
@@ -134,14 +134,16 @@ const loginBusiness = async (req, res) => {
     }
 
     const business = await Business.findOne({ email })
-
+    // console.log(`businessControllerTokenValues:\n _id:${business._id},\n role: ${businessOwner.role},\n owenerId: ${business.ownerId}` );
+    
     // Generate JWT token
     const token = jwt.sign(
-      { _id: business._id, role: businessOwner.role },
+      { _id: business._id, role: businessOwner.role , owenerId: business.ownerId },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-
+    // console.log('businessController:',token);
+    
     res.cookie('token', token)
     res.status(200).json({ message: 'Login successful', token });
 
@@ -153,8 +155,8 @@ const loginBusiness = async (req, res) => {
 //Business Logout
 const logoutBusiness = async (req, res, next) => {
   res.clearCookie('token');
-  // const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
-  const token = req.headers.authorization?.split(' ')[1];
+  const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+  // const token = req.headers.authorization?.split(' ')[1];
   await blackListModel.create({ token })
   res.status(200).json({ msg: "Logged out" })
 }

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const authorizeRole = (roles) => {
 
     return (req, res, next) => {
-        const token = req.headers.authorization?.split(' ')
+        const token = req.cookies.token ||req.headers.authorization?.split(' ')
         [1]; // Bearer <token>
         if (!token) {
             return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });

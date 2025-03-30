@@ -1,7 +1,9 @@
-const express = require("express")
 const mongoose = require('mongoose')
 const cors = require('cors')
 require('dotenv').config()
+const cookieParser = require('cookie-parser');
+const express = require("express")
+
 const app = express()
 
 // const port = 3000
@@ -26,6 +28,7 @@ mongoose.connect("mongodb://localhost:27017/NEXORA").then(() => {
 })
 app.use(cors())
 app.use(express.json())
+app.use(cookieParser())
 
 const userRoutes = require("./src/routes/userRoutes")
 app.use('/users',userRoutes)
@@ -33,3 +36,12 @@ app.use('/users',userRoutes)
 
 const businessRoutes = require('./src/routes/businessRoutes')
 app.use('/business',businessRoutes)
+
+const dealRoutes = require('./src/routes/dealRoutes')
+app.use('/deals', dealRoutes)
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
+  });

@@ -34,7 +34,7 @@ const dealSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   discountPercentage: {
@@ -50,7 +50,7 @@ const dealSchema = new mongoose.Schema({
   },
   discountedPrice: {
     type: Number,
-    required: true,
+    // required: true,
     min: 0,
   },
   dealStatus: {
@@ -58,9 +58,23 @@ const dealSchema = new mongoose.Schema({
     enum: ['active', 'expired', 'pending', 'rejected'],
     default: 'pending',
   },
-  expiryDate: {
+  startDate: {
     type: Date,
     required: true,
+  },
+  endDate: {
+    type: Date,
+    required: true,
+  },
+  dealType:{
+    type: String,
+    enum: ['flash', 'ragular'],
+    default: 'ragular',
+    required: true,
+  },
+  tags: {
+    type: [String],
+    default: [],
   },
   images: {
     type: [String],
@@ -77,6 +91,10 @@ const dealSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
   },
 });
 

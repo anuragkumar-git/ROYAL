@@ -81,7 +81,7 @@ const businessSchema = new mongoose.Schema({
   registrationNumber: {
     type: String,
     //? required: true, //Auto generate
-    unique: true,
+    //? unique: true,
   },
   website: {
     type: String,
@@ -108,6 +108,14 @@ businessSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
+
+// Generate JWT for authentication
+// businessSchema.methods.generateAuthToken = function () {
+//   const token = jwt.sign({ _id: this._id, role:this.role }, process.env.JWT_SECRET, { expiresIn: '24h' })
+//   console.log("businessModel:",token);
+  
+//   return token
+// }
 
 const Business = mongoose.model('Business', businessSchema);
 
