@@ -17,15 +17,15 @@ const { authenticateUser, authorizeRole } = require('../middlewares/authMiddlewa
 const router = express.Router();
 
 // Public Routes (No Authentication Required)
-router.post('/api/register', registerUser); // User Registration
-router.post('/api/login', loginUser);       // User Login
+router.post('/register', registerUser); // User Registration
+router.post('/login', loginUser);       // User Login
 
 // Protected Routes (Authentication Required)
-router.get('/api/profile', authenticateUser, getUserProfile); // View User Profile
-router.put('/api/profile', authenticateUser, updateUserProfile); // Update User Profile
-router.delete('/api/profile', authenticateUser, deleteUserAccount); // Delete User Account
+router.get('/profile', authenticateUser, getUserProfile); // View User Profile
+router.put('/profile', authenticateUser, updateUserProfile); // Update User Profile
+router.delete('/profile', authenticateUser, deleteUserAccount); // Delete User Account
 
-router.post('/api/logout', authenticateUser, logoutUser)//Logout User Account
+router.post('/logout', authenticateUser, logoutUser)//Logout User Account
 
 // Export the Router
 module.exports = router;

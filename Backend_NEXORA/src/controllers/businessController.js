@@ -4,7 +4,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
-const blackListModel = require('../models/tokenBlacklistModel')
+const blacklistTokenModel = require('../models/blacklistTokenModel');
 
 // Business Registration
 const registerBusiness = async (req, res) => {
@@ -26,13 +26,26 @@ const registerBusiness = async (req, res) => {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new User (business owner) in User collection
-    const newUser = new User({ name, email, password: hashedPassword, role: 'business' });
-    await newUser.save();
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      // Create a new User (business owner) in User collection if not exsist
+      const newUser = new User({ name, email, password: hashedPassword, role: 'business' });
+      await newUser.save();
+      const newBusiness = new Business({
+        ownerId:newUser._id,
+        businessName,
+        businessType,
+        email,
+        phone,
+        address,
+      });
+      await newBusiness.save();
+      return res.status(201).json({ message: 'new user Business registered successfully', newBusiness });
+    }
 
     // Create a Business document in Business collection
     const newBusiness = new Business({
-      ownerId: newUser._id,
+      ownerId:existingUser._id,
       businessName,
       businessType,
       email,
@@ -41,7 +54,7 @@ const registerBusiness = async (req, res) => {
     });
 
     await newBusiness.save();
-    res.status(201).json({ message: 'Business registered successfully', newBusiness });
+    res.status(201).json({ message: 'old user Business registered successfully', newBusiness });
 
   } catch (error) {
     res.status(500).json({ message: 'Error registering business', error: error.message });
@@ -157,7 +170,7 @@ const logoutBusiness = async (req, res, next) => {
   res.clearCookie('token');
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
   // const token = req.headers.authorization?.split(' ')[1];
-  await blackListModel.create({ token })
+  await blacklistTokenModel.create({ token })
   res.status(200).json({ msg: "Logged out" })
 }
 // Export all controllers

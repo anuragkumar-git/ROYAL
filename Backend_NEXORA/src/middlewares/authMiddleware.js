@@ -1,27 +1,24 @@
 // Import required modules
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const blacklistTokenModel = require('../models/blacklistTokenModel');
 require('dotenv').config();
 
 // Authentication Middleware to Verify JWT Token
 const authenticateUser = async (req, res, next) => {
   try {
     // Check if Authorization header exists and contains the token
-    const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Format: Bearer <token>
-    // console.log("token from cookie:",req.cookies.token);
-    // console.log("token from headers:", req.headers.authorization?.split(' ')[1]);
-    
-    // const token = req.headers.authorization?.split(' ')[1]; // Format: Bearer <token>
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Format: Bearer 
 
     if (!token) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
-    //? const isBlackListed = await userModel.findOne({ token: token })
-    //? if (isBlackListed) {
-    //?     return res.status(401).json({
-    //?         msg: "Unauthorized"
-    //?     })
-    //? }
+    const isBlackListed = await blacklistTokenModel.findOne({ token: token })
+    if (isBlackListed) {
+      return res.status(401).json({
+        msg: "Unauthorized"
+      })
+    }
 
     // Verify the token using the secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -41,19 +38,19 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-// Role-Based Authorization Middleware
-const authorizeUserRole = (roles) => {
-  return (req, res, next) => {
-    console.log(res.user);
+//? Role-Based Authorization Middleware
+// const authorizeUserRole = (roles) => {
+//   return (req, res, next) => {
+//     console.log(res.user);
 
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: 'Access denied. You do not have permission.' });
-    }
-    next();
-  };
-};
+//     if (!roles.includes(req.user.role)) {
+//       return res.status(403).json({ message: 'Access denied. You do not have permission.' });
+//     }
+//     next();
+//   };
+// };
 
 // Export Middleware Functions
 module.exports = {
-  authenticateUser, authorizeUserRole
+  authenticateUser
 };

@@ -9,25 +9,27 @@ const { createDeal, updateDeal, deleteDeal, deleteDeals, getDealById, getDealsFo
 const router = express.Router();
 
 // Public Route - Get all active deals for the landing page
-router.get('/api/', getAllDeals);
+router.get('/', getAllDeals);
 
 
 //? Protected Routes for Business Owners
 //Create deal route
-router.post('/api/', authenticateToken, authorizeRole(['business']), validateDealData, createDeal);
+router.post('/', authenticateToken, authorizeRole(['business']), validateDealData, createDeal);
+
 //update deal route
-// router.put('/api/:dealId', authenticateToken, authorizeRole(['business']), validateDealData, updateDeal);
-router.put('/api/:dealId', authenticateToken, authorizeRole(['business']), updateDeal);
+// router.put('/:dealId', authenticateToken, authorizeRole(['business']), validateDealData, updateDeal);
+router.put('/:dealId', authenticateToken, authorizeRole(['business']), updateDeal);
+
 //Delete deal Route
 router.delete(
-    '/api/:dealId',
+    '/:dealId',
     authenticateToken,
     authorizeRole(['business']),
     deleteDeal
 );
 
 router.delete(
-    '/api/',
+    '/',
     authenticateToken,
     authorizeRole(['business']),
     deleteDeals
@@ -35,14 +37,14 @@ router.delete(
 
 // Fetch Deals for Business Dashboard
 router.get(
-    '/api/business',
+    '/business',
     authenticateToken,
     authorizeRole(['business']),
     getDealsForBusiness
 );
 
 // Fetch a Single Deal by ID (Public or Business)
-router.get('/api/:dealId', getDealById);
+router.get('/:dealId', getDealById);
 
 
 module.exports = router;

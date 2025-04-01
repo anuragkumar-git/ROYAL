@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt'); // For password hashing
 const jwt = require('jsonwebtoken'); // For generating tokens
 const User = require('../models/userModel'); // Import User model
 require('dotenv').config(); // Load environment variables
-const blackListModel = require('../models/tokenBlacklistModel')
+const blacklistTokenModel = require('../models/blacklistTokenModel');
 
 // User Registration Controller
 const registerUser = async (req, res) => {
@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
     );
     res.cookie('token', token)
     // Send success response with token
-    res.status(200).json({ message: 'Login successful', token, user,role: user.role });
+    res.status(200).json({ message: 'Login successful', token, id:user._id,role: user.role });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -152,7 +152,7 @@ const logoutUser = async (req, res, next) => {
   res.clearCookie('token');
   const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
   // const token = req.headers.authorization?.split(' ')[1];
-  await blackListModel.create({ token })
+  await blacklistTokenModel.create({ token })
   res.status(200).json({ msg: "Logged out" })
 }
 

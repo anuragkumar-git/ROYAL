@@ -31,14 +31,18 @@ app.use(express.json())
 app.use(cookieParser())
 
 const userRoutes = require("./src/routes/userRoutes")
-app.use('/users',userRoutes)
+app.use('/api/users',userRoutes)
 
 
 const businessRoutes = require('./src/routes/businessRoutes')
-app.use('/business',businessRoutes)
+app.use('/api/business',businessRoutes)
 
 const dealRoutes = require('./src/routes/dealRoutes')
-app.use('/deals', dealRoutes)
+app.use('/api/deals', dealRoutes)
+
+const reviewRoutes = require('./src/routes/reviewRoutes')
+app.use('/api/reviews', reviewRoutes)
+
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

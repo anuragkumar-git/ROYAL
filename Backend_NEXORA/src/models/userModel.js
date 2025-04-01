@@ -78,27 +78,31 @@ const userSchema = new mongoose.Schema({
     },
   ],
   reviewHistory: [
-    {
-      dealId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Deal',
-      },
-      title: {
-        type: String,
-      },
-      rating: {
-        type: Number,
-        min: 1,
-        max: 5,
-      },
-      review: {
-        type: String,
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now,
-      },
-    },
+    mongoose.Schema.Types.ObjectId
+    // {
+        // type: mongoose.Schema.Types.ObjectId,
+        // ref: 'Review',
+    // {
+    //   dealId: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Deal',
+    //   },
+    //   title: {
+    //     type: String,
+    //   },
+    //   rating: {
+    //     type: Number,
+    //     min: 1,
+    //     max: 5,
+    //   },
+    //   review: {
+    //     type: String,
+    //   },
+    //   createdAt: {
+    //     type: Date,
+    //     default: Date.now,
+    //   },
+    // },
   ],
   createdAt: {
     type: Date,

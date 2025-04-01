@@ -1,9 +1,11 @@
 const jwt = require('jsonwebtoken');
 const Business = require('../models/businessModel');
 const User = require('../models/userModel');
+const blacklistTokenModel = require('../models/blacklistTokenModel');
 
 // Middleware to authenticate business token
 const authenticateToken = async (req, res, next) => {
+    try {
     // Extract token from cookies or Authorization header
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Bearer <token>
 
@@ -11,7 +13,13 @@ const authenticateToken = async (req, res, next) => {
         return res.status(401).json({ success: false, message: 'Access denied. No token provided.' });
     }
 
-    try {
+     const isBlackListed = await blacklistTokenModel.findOne({ token: token })
+        if (isBlackListed) {
+          return res.status(401).json({
+            msg: "Unauthorized"
+          })
+        }
+
         // Verify token using JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
