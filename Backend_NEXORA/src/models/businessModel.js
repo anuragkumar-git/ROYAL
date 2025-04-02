@@ -76,7 +76,7 @@ const businessSchema = new mongoose.Schema({
   businessType: {
     type: String,
     required: true,
-    enum: ['Restaurant', 'Cafe', 'Hotel', 'Shop', 'Other'],
+    // enum: ['Restaurant', 'Cafe', 'Hotel', 'Shop', 'Wellness & Yoga','Printing & Publishing','Other'],
   },
   registrationNumber: {
     type: String,

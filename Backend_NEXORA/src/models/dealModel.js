@@ -50,7 +50,6 @@ const dealSchema = new mongoose.Schema({
   },
   discountedPrice: {
     type: Number,
-    // required: true,
     min: 0,
   },
   dealStatus: {
@@ -68,8 +67,8 @@ const dealSchema = new mongoose.Schema({
   },
   dealType:{
     type: String,
-    enum: ['flash', 'ragular'],
-    default: 'ragular',
+    enum: ['flash', 'regular', 'featured', 'festival', 'stockClearance'],
+    default: 'regular',
     required: true,
   },
   tags: {

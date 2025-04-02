@@ -1,8 +1,7 @@
 const express = require('express');
 
 const { validateDealData } = require('../middlewares/validateDealData');
-const { authenticateToken } = require('../middlewares/authenticateToken')
-const { authorizeRole } = require('../middlewares/authorizeRole')
+const {authenticateUser, authorizeRole } = require('../middlewares/authMiddleware')
 
 const { createDeal, updateDeal, deleteDeal, deleteDeals, getDealById, getDealsForBusiness, getAllDeals } = require('../controllers/dealController');
 
@@ -14,23 +13,23 @@ router.get('/', getAllDeals);
 
 //? Protected Routes for Business Owners
 //Create deal route
-router.post('/', authenticateToken, authorizeRole(['business']), validateDealData, createDeal);
+router.post('/', authenticateUser, authorizeRole(['business']), validateDealData, createDeal);
 
 //update deal route
-// router.put('/:dealId', authenticateToken, authorizeRole(['business']), validateDealData, updateDeal);
-router.put('/:dealId', authenticateToken, authorizeRole(['business']), updateDeal);
+// router.put('/:dealId', authenticateUser, authorizeRole(['business']), validateDealData, updateDeal);
+router.put('/:dealId', authenticateUser, authorizeRole(['business']), updateDeal);
 
 //Delete deal Route
 router.delete(
     '/:dealId',
-    authenticateToken,
+    authenticateUser,
     authorizeRole(['business']),
     deleteDeal
 );
 
 router.delete(
     '/',
-    authenticateToken,
+    authenticateUser,
     authorizeRole(['business']),
     deleteDeals
 );
@@ -38,7 +37,7 @@ router.delete(
 // Fetch Deals for Business Dashboard
 router.get(
     '/business',
-    authenticateToken,
+    authenticateUser,
     authorizeRole(['business']),
     getDealsForBusiness
 );

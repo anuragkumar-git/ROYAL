@@ -1,6 +1,6 @@
-// Import required modules
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
+const Business = require('../models/businessModel')
 const blacklistTokenModel = require('../models/blacklistTokenModel');
 require('dotenv').config();
 
@@ -8,29 +8,37 @@ require('dotenv').config();
 const authenticateUser = async (req, res, next) => {
   try {
     // Check if Authorization header exists and contains the token
-    const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Format: Bearer 
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1]; // Format: Bearer token
 
     if (!token) {
       return res.status(401).json({ message: 'Access denied. No token provided.' });
     }
-    const isBlackListed = await blacklistTokenModel.findOne({ token: token })
+
+    // Check if token is blacklisted
+    const isBlackListed = await blacklistTokenModel.findOne({ token })
+
     if (isBlackListed) {
       return res.status(401).json({
-        msg: "Unauthorized"
+        msg: "Unauthorized. Token is blacklisted."
       })
     }
 
     // Verify the token using the secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // Attach decoded user data (userId and role) to the request object
 
-    // Check if user exists in the database
 
-    const user = await User.findById(req.user._id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found. middleware' });
+    // Check if user or business exists in the database
+    let account;
+    if (decoded.role === 'user') {
+      account = await User.findById(decoded._id);
+    } else if (decoded.role === 'business') {
+      account = await Business.findById(decoded._id)
     }
 
+    if (!account) {
+      return res.status(401).json({ message: 'authMiddleware:\nAccount not found' })
+    }
+    req.user = decoded
     // Proceed to the next middleware or controller
     next();
   } catch (error) {
@@ -39,18 +47,17 @@ const authenticateUser = async (req, res, next) => {
 };
 
 //? Role-Based Authorization Middleware
-// const authorizeUserRole = (roles) => {
-//   return (req, res, next) => {
-//     console.log(res.user);
+const authorizeRole = (roles) => {
+  return (req, res, next) => {
 
-//     if (!roles.includes(req.user.role)) {
-//       return res.status(403).json({ message: 'Access denied. You do not have permission.' });
-//     }
-//     next();
-//   };
-// };
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: 'Access denied. You do not have permission.' });
+    }
+    next();
+  };
+};
 
 // Export Middleware Functions
 module.exports = {
-  authenticateUser
+  authenticateUser, authorizeRole
 };

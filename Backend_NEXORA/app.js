@@ -31,11 +31,10 @@ app.use(express.json())
 app.use(cookieParser())
 
 const userRoutes = require("./src/routes/userRoutes")
-app.use('/api/users',userRoutes)
-
+app.use('/api/users', userRoutes)
 
 const businessRoutes = require('./src/routes/businessRoutes')
-app.use('/api/business',businessRoutes)
+app.use('/api/business', businessRoutes)
 
 const dealRoutes = require('./src/routes/dealRoutes')
 app.use('/api/deals', dealRoutes)
@@ -43,9 +42,11 @@ app.use('/api/deals', dealRoutes)
 const reviewRoutes = require('./src/routes/reviewRoutes')
 app.use('/api/reviews', reviewRoutes)
 
+const authRoutes = require('./src/routes/authRoutes')
+app.use('/api', authRoutes)
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
-  });
+});

@@ -10,8 +10,8 @@ const jwt = require("jsonwebtoken")
 const createDeal = async (req, res) => {
     try {
 
-        const businessId = req.business._id
-        console.log(businessId);
+        const businessId = req.user._id
+        // console.log(businessId);
 
         // Create a new deal using the request body
         const newDeal = new Deal({ ...req.body, businessId });
@@ -97,7 +97,7 @@ const getDealById = async (req, res) => {
 const getDealsForBusiness = async (req, res) => {
     try {
         // const businessId = req.user.id;
-        const businessId = req.business.id;
+        const businessId = req.user.id;
 
 
         // const deals = await Deal.find({ businessId, isActive: true });
@@ -145,7 +145,7 @@ const updateDeal = async (req, res) => {
 
         // Ensure only the business owner can update the deal
         // if (req.user.role !== 'business' || deal.businessId.toString() !== req.user.businessId) {
-        if (deal.businessId.toString() !== req.business._id.toString()) {
+        if (deal.businessId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Access Denied. Only the owner can update this deal.' });
         }
 
@@ -176,8 +176,8 @@ const deleteDeal = async (req, res) => {
         }
 
         // Ensure only the business owner can delete it
-        // if (req.user.role !== 'business' || deal.businessId.toString() !== req.business._id) {
-        if (deal.businessId.toString() !== req.business._id.toString()) {
+        // if (req.user.role !== 'business' || deal.businessId.toString() !== req.user._id) {
+        if (deal.businessId.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: 'Access Denied. Only the owner can delete this deal.' });
         }
 
@@ -199,7 +199,7 @@ const deleteDeal = async (req, res) => {
 const deleteDeals = async (req, res) => {
     try {
 
-        const totalDeals = await Deal.countDocuments({ businessId: req.business._id, isActive: true });
+        const totalDeals = await Deal.countDocuments({ businessId: req.user._id, isActive: true });
         if (totalDeals === 0) {
             return res.status(401).json({ message: 'No active deals found for this business.' });
         }
@@ -208,7 +208,7 @@ const deleteDeals = async (req, res) => {
 
         // Perform soft delete
         await Deal.updateMany(
-            { businessId: req.business._id, isActive: true },
+            { businessId: req.user._id, isActive: true },
             { $set: { isActive: false } }
         );
 

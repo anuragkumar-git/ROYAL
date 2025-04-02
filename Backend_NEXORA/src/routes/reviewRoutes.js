@@ -8,9 +8,7 @@ const {
   toggleReviewVisibility
 } = require('../controllers/reviewController');
 
-const {authenticateUser} = require('../middlewares/authMiddleware');
-const {authenticateToken} = require('../middlewares/authenticateToken');
-const { authorizeRole } = require('../middlewares/authorizeRole');
+const {authenticateUser, authorizeRole} = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
@@ -57,7 +55,7 @@ router.get(
 // ----------------------------
 router.get(
   '/business',
-  authenticateToken,
+  authenticateUser,
   authorizeRole(['business']),
   getBusinessReviews
 );
@@ -67,7 +65,7 @@ router.get(
 // ----------------------------
 router.patch(
   '/visibility/:reviewId',
-  authenticateToken,
+  authenticateUser,
   authorizeRole(['business']),
   toggleReviewVisibility
 );

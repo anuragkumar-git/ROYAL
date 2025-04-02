@@ -43,7 +43,7 @@ const addReview = async (req, res) => {
     );
 
     if (result.modifiedCount === 0) {
-      console.log("Review not found or already removed.");
+      // console.log("Review not found or already removed.");
       return res.status(500).json({ message: "No matching review to remove" });
     }
     res.status(201).json({ message: 'Review added successfully', review: newReview });
@@ -151,7 +151,7 @@ const getDealReviews = async (req, res) => {
 // ----------------------------
 const getBusinessReviews = async (req, res) => {
   try {
-    const businessId = req.business._id;
+    const businessId = req.user._id;
 
     // Find all deals of the business
     const deals = await Deal.find({ businessId }).select('_id');
@@ -180,7 +180,7 @@ const getBusinessReviews = async (req, res) => {
 const toggleReviewVisibility = async (req, res) => {
   try {
     const { reviewId } = req.params;
-    const businessId = req.business._id; // Extract from the token using authenticateToken
+    const businessId = req.user._id; // Extract from the token using authenticateUser
 
     // Find the review
     const review = await Review.findById(reviewId);
