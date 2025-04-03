@@ -46,7 +46,10 @@ const authRoutes = require('./src/routes/authRoutes')
 app.use('/api', authRoutes)
 
 const reportedDealRoutes = require('./src/routes/reportedDealRoutes')
-app.use('/api', reportedDealRoutes)
+app.use('/api/report', reportedDealRoutes)
+
+const adminRoutes = require('./src/routes/adminRoutes')
+app.use('/api/admin', adminRoutes)
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
