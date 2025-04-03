@@ -45,6 +45,9 @@ app.use('/api/reviews', reviewRoutes)
 const authRoutes = require('./src/routes/authRoutes')
 app.use('/api', authRoutes)
 
+const reportedDealRoutes = require('./src/routes/reportedDealRoutes')
+app.use('/api', reportedDealRoutes)
+
 // Error Handling Middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

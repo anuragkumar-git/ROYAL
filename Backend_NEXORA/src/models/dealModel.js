@@ -95,6 +95,10 @@ const dealSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  isReported: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Calculate discountedPrice based on originalPrice and discountPercentage

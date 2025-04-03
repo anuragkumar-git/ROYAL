@@ -37,7 +37,7 @@ const getAllDeals = async (req, res) => {
         const sortOption = { [sortBy]: order === 'asc' ? 1 : -1 };
 
         // Find all active deals
-        const deals = await Deal.find({ isActive: true }).populate('businessId', 'name email')
+        const deals = await Deal.find({ isActive: true }).populate('businessId', 'businessName email')
             .sort(sortOption)
             .skip((page - 1) * limit)
             .limit(Number(limit));
