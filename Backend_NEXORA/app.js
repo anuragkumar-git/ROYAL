@@ -3,6 +3,8 @@ const express = require("express")
 const cors = require('cors')
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db')
+const passport = require('passport')
+require('./config/googleAuth')
 
 const app = express()
 const port = process.env.PORT || 5000
@@ -14,6 +16,7 @@ connectDB()
 app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
+app.use(passport.initialize()); // ✅ Required to use any passport strategy
 
 // Routes
 const userRoutes = require("./src/routes/userRoutes")

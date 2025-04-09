@@ -43,11 +43,18 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: function () {
+      return !this.googleId;
+    },
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true //Allow this field to be optional for non-google users
   },
   avatar: {
     type: String,
-    default: 'https://cdn-icons-png.flaticon.com/512/10337/10337609.png', // URL or path to avatar image
+    // default: 'https://cdn-icons-png.flaticon.com/512/10337/10337609.png', // URL or path to avatar image
   },
   role: {
     type: String,

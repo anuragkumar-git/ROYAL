@@ -5,7 +5,6 @@ const Business = require('../models/businessModel')
 const ResetToken = require('../models/resetTokenModel')
 const { generateToken, blackListToken } = require('../utils/tokenUtils')
 const sendEmail = require('../utils/sendMail')
-const { log } = require('console')
 
 const signIn = async (req, res) => {
     try {
@@ -149,4 +148,19 @@ const resetPassword = async (req, res) => {
     }
 };
 
-module.exports = { signIn, signOut, forgetPassword, resetPassword }
+
+const googleCallbackController = async (req, res) => {
+    try {
+        const user = req.user
+        const token = await generateToken(user)
+
+        res.cookie('token', token)
+
+        const redirectUrl = `${process.env.CLIENT_URL}`
+        res.redirect(redirectUrl)
+    } catch (err) {
+        // console.log('google log in err:', err);
+        res.status(500).json({ message: "google log in err:", err })
+    }
+}
+module.exports = { signIn, signOut, forgetPassword, resetPassword, googleCallbackController }

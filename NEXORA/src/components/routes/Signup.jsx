@@ -150,7 +150,7 @@ export const Signup = () => {
                           Submit
                         </button>
                       </div>
-                      
+
                       <div class="text-center">
                         <p class="mb-0">
                           Already have an account?{" "}
@@ -163,6 +163,21 @@ export const Signup = () => {
                           Register as Business Owner?{" "}
                           <Link to="/businessregistration">Register</Link>
                         </p>
+                      </div>
+                      <div className="text-center mt-3">
+                        <p>or</p>
+                        <a
+                          href="http://localhost:3000/api/auth/google"
+                          className="btn btn-light"
+                          style={{ color: "#4285F4", border: "1px solid #ccc" }}
+                        >
+                          <img
+                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRGRHwMV2dmqrsek8owp1KWFP7Uf66_ABvPfuVUVIB0n_VghaNvGnMuGwM1CsQpdWOIeQ&usqp=CAU"
+                            alt="Google logo"
+                            style={{ width: "20px", marginRight: "10px" }}
+                          />
+                          Continue with Google
+                        </a>
                       </div>
                     </form>
                   </div>
