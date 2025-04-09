@@ -62,7 +62,7 @@ const loginUser = async (req, res) => {
     );
     res.cookie('token', token)
     // Send success response with token
-    res.status(200).json({ message: 'Login successful', token, id:user._id,role: user.role });
+    res.status(200).json({ message: 'Login successful', token, id: user._id, role: user.role });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

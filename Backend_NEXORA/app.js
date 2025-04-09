@@ -43,7 +43,7 @@ const reviewRoutes = require('./src/routes/reviewRoutes')
 app.use('/api/reviews', reviewRoutes)
 
 const authRoutes = require('./src/routes/authRoutes')
-app.use('/api', authRoutes)
+app.use('/api/auth', authRoutes)
 
 const reportedDealRoutes = require('./src/routes/reportedDealRoutes')
 app.use('/api/report', reportedDealRoutes)
