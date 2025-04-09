@@ -1,35 +1,21 @@
-const mongoose = require('mongoose')
-const cors = require('cors')
 require('dotenv').config()
-const cookieParser = require('cookie-parser');
 const express = require("express")
+const cors = require('cors')
+const cookieParser = require('cookie-parser');
+const connectDB = require('./config/db')
 
 const app = express()
-
-// const port = 3000
 const port = process.env.PORT || 5000
 
-try {
-    app.listen(port, () => {
-        // console.log(`server started on ${link}`);
-        console.log(`🖥️  Server running at\x1b[34m http://localhost:${port}\x1b[0m`);
+// Connect to MongoDB
+connectDB()
 
-    })
-} catch (error) {
-    console.log(error);
-}
-
-
-// mongoose.connect("mongodb://localhost:27017/testnexora").then(() => {
-mongoose.connect("mongodb://localhost:27017/NEXORA").then(() => {
-    console.log('mongoDB connected');
-}).catch((err) => {
-    console.log(`Mongoose error: ${err}`);
-})
+// Middleware
 app.use(cors())
 app.use(express.json())
 app.use(cookieParser())
 
+// Routes
 const userRoutes = require("./src/routes/userRoutes")
 app.use('/api/users', userRoutes)
 
@@ -56,3 +42,8 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
 });
+
+// Start Server
+app.listen(port, () => {
+    console.log(`🖥️  Server running at\x1b[34m http://localhost:${port}\x1b[0m`);
+})
