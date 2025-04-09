@@ -18,10 +18,10 @@ const registerBusiness = async (req, res) => {
     const { name, email, phone, password, businessName, businessType, address } = req.body;
 
     // Check if the business already exists
-    const existingBusiness = await Business.findOne({ email });
-    if (existingBusiness) {
-      return res.status(400).json({ message: 'Business with this email already exists' });
-    }
+    // const existingBusiness = await Business.findOne({ email });
+    // if (existingBusiness) {
+    //   return res.status(400).json({ message: 'Business with this email already exists' });
+    // }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -57,6 +57,10 @@ const registerBusiness = async (req, res) => {
     res.status(201).json({ message: 'old user Business registered successfully', newBusiness });
 
   } catch (error) {
+    if (error.code === 11000) {
+      // Mongoose E11000 error - Duplicate key
+      return res.status(400).json({ error: 'Email already exists' });
+    }
     res.status(500).json({ message: 'Error registering business', error: error.message });
   }
 };
