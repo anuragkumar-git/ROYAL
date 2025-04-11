@@ -13,6 +13,7 @@ const generateToken = async (user) => {
         payload._id = business._id,
             payload.owenerId = business.ownerId
     }
+    // console.log('payload', payload);
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '2h' })
     return token
     } catch (error) {
@@ -25,7 +26,7 @@ const generateToken = async (user) => {
 
 const verifyToken = (token) => {
     try {
-        const decode = wt.verify(token, process.env.JWT_SECRET)
+        const decode = jwt.verify(token, process.env.JWT_SECRET)
         // console.log('decoded token:\n', decode);
 
         return jwt.verify(token, process.env.JWT_SECRET)

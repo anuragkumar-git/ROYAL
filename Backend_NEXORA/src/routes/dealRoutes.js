@@ -2,6 +2,7 @@ const express = require('express');
 
 const { validateDealData } = require('../middlewares/validateDealData');
 const {authenticateUser, authorizeRole } = require('../middlewares/authMiddleware')
+const upload = require('../middlewares/uploadMiddleware');
 
 const { createDeal, updateDeal, deleteDeal, deleteDeals, getDealById, getDealsForBusiness, getAllDeals } = require('../controllers/dealController');
 
@@ -13,7 +14,7 @@ router.get('/', getAllDeals);
 
 //? Protected Routes for Business Owners
 //Create deal route
-router.post('/', authenticateUser, authorizeRole(['business']), validateDealData, createDeal);
+router.post('/', authenticateUser, authorizeRole(['business']), upload.single('images'), validateDealData, createDeal);
 
 //update deal route
 // router.put('/:dealId', authenticateUser, authorizeRole(['business']), validateDealData, updateDeal);

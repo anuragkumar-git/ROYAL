@@ -29,7 +29,7 @@ const authenticateUser = async (req, res, next) => {
 
     // Check if user or business exists in the database
     let account;
-    if (decoded.role === 'user' || 'admin') {
+    if (decoded.role === 'user' || decoded.role === 'admin') {
       account = await User.findById(decoded._id);
     } else if (decoded.role === 'business') {
       account = await Business.findById(decoded._id)

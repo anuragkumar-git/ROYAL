@@ -1,8 +1,7 @@
 // middlewares/validateDealData.js
 
 const validateDealData = (req, res, next) => {
-    const { title, description, startDate, endDate, discountPercentage, originalPrice  } = req.body;
-  
+    let { title, description, startDate, endDate, discountPercentage, originalPrice  } = req.body;    
     try {
        // Check if required fields are present
     if (!title || !description || !startDate || !endDate) {
@@ -11,6 +10,8 @@ const validateDealData = (req, res, next) => {
       return res.status(400).json({ message: `Missing required fields` });
     }
   
+    discountPercentage = Number(discountPercentage);
+    originalPrice = Number(originalPrice);    
     // Validate data types
     if (typeof title !== 'string' || typeof description !== 'string') {
       return res.status(400).json({ message: "Title and Description must be strings" });

@@ -31,7 +31,7 @@ const signIn = async (req, res) => {
         //Set token in cookie
         res.cookie('token', token)
 
-        res.status(200).json({ message: 'Login successful', token, role: account })
+        res.status(200).json({ message: 'Login successful' })
     } catch (error) {
         res.status(500).json({ message: `Error logging in: ${error.message}` });
     }

@@ -11,10 +11,10 @@ const createDeal = async (req, res) => {
     try {
 
         const businessId = req.user._id
-        // console.log(businessId);
+        const imageUrl = req.file.path; // Cloudinary URL
 
         // Create a new deal using the request body
-        const newDeal = new Deal({ ...req.body, businessId });
+        const newDeal = new Deal({ ...req.body, images:imageUrl, businessId });
 
         await newDeal.save();
         res.status(201).json({ message: 'Deal created successfully', deal: newDeal });
