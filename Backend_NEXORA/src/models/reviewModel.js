@@ -12,11 +12,11 @@ const reviewSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-  // businessId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Business',
-  //   required: true,
-  // },
+  businessId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Business',
+    required: true,
+  },
   rating: {
     type: Number,
     required: true,
@@ -32,10 +32,6 @@ const reviewSchema = new mongoose.Schema({
   isVisible: {
     type: Boolean,
     default: true, // Reviews can be hidden by admin
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
   },
 },
   {

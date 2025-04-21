@@ -22,5 +22,7 @@ const reportedDealSchema = new mongoose.Schema({
     }
 });
 
+// Indexes
+reportedDealSchema.index({ dealId: 1, reportedBy: 1 }, { unique: true });
 const ReportedDeal = mongoose.model('ReportedDeal', reportedDealSchema);
 module.exports = ReportedDeal;

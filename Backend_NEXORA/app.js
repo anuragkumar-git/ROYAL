@@ -43,7 +43,7 @@ app.use('/api/reviews', reviewRoutes)
 const reportedDealRoutes = require('./src/routes/reportedDealRoutes')
 app.use('/api/report', reportedDealRoutes)
 
-const adminRoutes = require('./src/routes/adminRoutes')
+const adminRoutes = require('./src/routes/adminRoutes');
 app.use('/api/admin', adminRoutes)
 
 // Error Handling Middleware
@@ -51,6 +51,10 @@ app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
 });
+
+// Import and schedule cron jobs
+const { scheduleJobs } = require('./src/utils/cron');
+scheduleJobs();
 
 // Start Server
 app.listen(port, () => {

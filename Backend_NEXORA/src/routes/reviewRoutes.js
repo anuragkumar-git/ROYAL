@@ -9,12 +9,18 @@ const {
 } = require('../controllers/reviewController');
 
 const {authenticateUser, authorizeRole} = require('../middlewares/authMiddleware');
-
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 
-// ----------------------------
-// 1. Add a Review (Users only)
-// ----------------------------
+// Rate limiting
+const reviewLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 10 });
+
+/**
+ // 1. Add a Review (Users only)
+ * @route POST /api/reviews
+ * @desc Create a review for a deal
+ * @access Protected (user)
+ */
 router.post(
   '/',
   authenticateUser,
@@ -42,9 +48,12 @@ router.delete(
   deleteReview
 );
 
-// ----------------------------
+/**
 // 4. Get All Reviews for a Deal (Public)
-// ----------------------------
+ * @route GET /api/reviews/:dealId
+ * @desc Get reviews for a deal
+ * @access Public
+ */
 router.get(
   '/deal/:dealId',
   getDealReviews

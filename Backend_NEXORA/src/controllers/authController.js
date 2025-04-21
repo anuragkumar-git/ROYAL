@@ -4,7 +4,7 @@ const User = require('../models/userModel')
 const Business = require('../models/businessModel')
 const ResetToken = require('../models/resetTokenModel')
 const { generateToken, blackListToken } = require('../utils/tokenUtils')
-const sendEmail = require('../utils/sendMail')
+const sendEmail = require('../utils/sendEmail')
 
 const signIn = async (req, res) => {
     try {
@@ -27,13 +27,20 @@ const signIn = async (req, res) => {
 
         //generate TOken
         const token = await generateToken(account)
+        if (!token) return res.status(500).json({ message: 'Token generation failed' });
 
         //Set token in cookie
-        res.cookie('token', token)
+        res.cookie('token', token, {
+            // httpsOnly: true,
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+        });
 
-        res.status(200).json({ message: 'Login successful' })
+        res.status(200).json({ message: 'Login successful', id: user._id, role: user.role });
     } catch (error) {
-        res.status(500).json({ message: `Error logging in: ${error.message}` });
+        console.error('signIn:', error);
+        res.status(500).json({ message: 'Error logging in', error: error.message });
     }
 }
 
@@ -45,12 +52,13 @@ const signOut = async (req, res) => {
             return res.status(400).json({ message: 'No token provided' });
         }
 
-        res.clearCookie('token')
-        await blackListToken(token)
+        await blackListToken(token);
 
-        res.status(200).json({ message: "Logout successful" })
+        res.clearCookie('token');
+        res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
-        res.status(500).json({ message: `Error logging out: ${error.message}` });
+        console.error('signOut:', error);
+        res.status(500).json({ message: 'Error logging out', error: error.message });
     }
 }
 
@@ -78,24 +86,18 @@ const forgetPassword = async (req, res) => {
         });
 
         // 4. Create a reset link
-        // const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
         const resetLink = `${process.env.CLIENT_URL}/resetpassword/${resetToken}`;
 
-        const message = `
-        <html><a href="${resetLink}">Click here</a>
-        </html>`
         // 5. Send the email
         await sendEmail(
             user.email,
             'Password Reset Request',
             `Hi ${user.name},\n\nClick here to reset your password: ${resetLink}\n\nThis link will expire in 15 minutes.\n\nIf you did not request this, please ignore it.`
-            // `Hi ${user.name}, \n\n${message} to reset your password to reset your password. \n\nThis link will expire in 15 minutes. \n\nIf you did not request this, please ignore it.`
         );
 
         res.status(200).json({ message: 'Password reset link sent to email.', hashedToken });
-    }
-
-    catch (error) {
+    } catch (error) {
+        console.error('forgetPassword:', error);
         res.status(500).json({ message: 'Error sending reset email', error: error.message });
     }
 }
@@ -105,18 +107,18 @@ const resetPassword = async (req, res) => {
         const { token } = req.params;
         const { password } = req.body;
 
+        // console.log(token);
 
         if (!token || !password) {
             return res.status(400).json({ message: 'Token and new password are required.' });
         }
 
         // 1. Hash the token to match stored one
-        // const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
         // 2. Find the token entry in DB
         const tokenDoc = await ResetToken.findOne({
-            // token: hashedToken,
-            token,
+            token: hashedToken,
             expiresAt: { $gt: new Date() }, // token should not be expired
         });
         // console.log('token', token, 'pass', password);
@@ -142,11 +144,13 @@ const resetPassword = async (req, res) => {
         // 5. Delete token after successful reset
         await ResetToken.deleteOne({ _id: tokenDoc._id });
 
+        console.log(`Password reset for user ${user._id}`);
         res.status(200).json({ message: 'Password has been reset successfully.' });
     } catch (error) {
-        res.status(500).json({ message: 'Failed to reset password.', error: error.message });
+        console.error('resetPassword:', error);
+        res.status(500).json({ message: 'Error resetting password', error: error.message });
     }
-};
+}
 
 
 const googleCallbackController = async (req, res) => {
@@ -154,13 +158,18 @@ const googleCallbackController = async (req, res) => {
         const user = req.user
         const token = await generateToken(user)
 
-        res.cookie('token', token)
+        // Set secure cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            // secure: process.env.NODE_ENV === 'production',
+            // sameSite: 'strict',
+        });
 
         const redirectUrl = `${process.env.CLIENT_URL}`
         res.redirect(redirectUrl)
-    } catch (err) {
-        // console.log('google log in err:', err);
-        res.status(500).json({ message: "google log in err:", err })
+    } catch (error) {
+        console.error('googleCallbackController:', error);
+        res.status(500).json({ message: 'Error with Google login', error: error.message });
     }
 }
 module.exports = { signIn, signOut, forgetPassword, resetPassword, googleCallbackController }

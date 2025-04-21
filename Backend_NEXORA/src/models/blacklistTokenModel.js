@@ -16,7 +16,9 @@ const tokenBlacklistSchema = new mongoose.Schema({
 });
 
 // Optional: Indexing for automatic deletion of expired tokens (using TTL Index)
-tokenBlacklistSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+// tokenBlacklistSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+// Index for faster lookups
+// tokenBlacklistSchema.index({ token: 1 }, { unique: true });
 
 const blacklistTokenModel = mongoose.model('TokenBlacklist', tokenBlacklistSchema);
  

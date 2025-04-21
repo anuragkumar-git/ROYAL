@@ -8,6 +8,7 @@ const Deal = require('../models/dealModel');
  */
 const reportDeal = async (req, res) => {
   try {
+    const reportedBy = req.user._id
     const { dealId, reason } = req.body;
 
     // Check if deal exists
@@ -17,7 +18,7 @@ const reportDeal = async (req, res) => {
     }
 
     // Prevent duplicate reports from the same user
-    const existingReport = await ReportedDeal.findOne({ dealId, reportedBy: req.user._id });
+    const existingReport = await ReportedDeal.findOne({ dealId, reportedBy });
     if (existingReport) {
       return res.status(400).json({ message: 'You have already reported this deal' });
     }
@@ -25,7 +26,7 @@ const reportDeal = async (req, res) => {
     // Create a new report
     const newReport = new ReportedDeal({
       dealId,
-      reportedBy: req.user._id,
+      reportedBy,
       reason
     });
 
@@ -34,9 +35,11 @@ const reportDeal = async (req, res) => {
     // Update `isReported` flag in the Deal collection
     await Deal.findByIdAndUpdate(dealId, { isReported: true });
 
-    res.status(201).json({ message: 'Deal reported successfully' });
+    console.log(`Deal ${dealId} reported by user ${userId}`);
+    res.status(201).json({ success: true, message: 'Deal reported successfully' });
   } catch (error) {
-    res.status(500).json({ message: `Error reporting deal: ${error.message}` });
+    console.error('reportDeal:', error);
+    res.status(500).json({ success: false, message: 'Error reporting deal', error: error.message });
   }
 };
 
@@ -47,7 +50,7 @@ const reportDeal = async (req, res) => {
  */
 const getAllReportedDeals = async (req, res) => {
   try {
-    const reportedDeals = await ReportedDeal.find().populate('dealId').populate('reportedBy', 'name email');
+    const reportedDeals = await ReportedDeal.find().populate('dealId').populate('reportedBy', 'name email')
 
     res.status(200).json(reportedDeals);
   } catch (error) {

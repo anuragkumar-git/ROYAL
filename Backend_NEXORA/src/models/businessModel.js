@@ -1,50 +1,4 @@
 const mongoose = require('mongoose')
-// const Schema = mongoose.Schema
-
-// const bussinessRegistraionSchema = new Schema({
-
-//     businessInformation: {
-//         name: {
-//             type: String
-//         },
-//         contact: {
-//             type: Number
-//         },
-//     },
-//     ownerDetails: {
-//         name: {
-//             type: String
-//         },
-//         email: {
-//             type: String
-//         },
-//         contact: {
-//             type: Number
-//         }
-//     },
-//     businessAddress: {
-//         address: {
-//             type: String
-//         },
-//         location: {
-//             lat: Number,
-//             lng: Number
-//         }
-//     }, oprationalDetails: {
-//         menuType: String,
-//         operationalHours: String
-//     }, role: {
-//         id: {
-//             type: Schema.Types.ObjectId,
-//             ref: "roles"
-//         },
-//         desc: {
-//             type: String
-//         }
-//     }
-// })
-// module.exports = mongoose.model("bussinesses", bussinessRegistraionSchema)
-
 
 const businessSchema = new mongoose.Schema({
   ownerId: {
@@ -63,6 +17,7 @@ const businessSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     unique: true,
+    match: [/^\S+@\S+\.\S+$/, 'Invalid email format'],
   },
   phone: {
     type: String,
@@ -72,6 +27,10 @@ const businessSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
+  },
+  location: {
+    type: { type: String, enum: ['Point'], required: true },
+    coordinates: { type: [Number], required: true }, // [longitude, latitude]
   },
   businessType: {
     type: String,
@@ -93,34 +52,56 @@ const businessSchema = new mongoose.Schema({
     enum: ['pending', 'approved', 'rejected'],
     default: 'pending',
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
   isBlocked: {
     type: Boolean,
     default: false,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
+  role: {
+    type: String,
+    enum: ['business'],
+    default: 'business',
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
+}, { timestamps: true });
+
+// Virtual field to count active deals
+// Counts Deal documents where businessId matches this Business._id, dealStatus: 'active', and verified: true
+businessSchema.virtual('activeDeals', {
+  ref: 'Deal',                    // References Deal model
+  localField: '_id',             // Matches Business._id
+  foreignField: 'businessId',    // Matches Deal.businessId
+  count: true,                   // Returns count of matching Deals
+  // match: { dealStatus: 'active', verified: true } // Only counts active, verified deals
+  match: { isActive: true } // Only counts active, verified deals
 });
 
-// Pre-save hook to update `updatedAt`
+// Ensure virtuals are included in toJSON and toObject
+businessSchema.set('toJSON', { virtuals: true });
+businessSchema.set('toObject', { virtuals: true });
+
+// Indexes for performance
+// businessSchema.index({ email: 1 }, { unique: true });
+// businessSchema.index({ registrationNumber: 1 }, { unique: true });
+businessSchema.index({ location: '2dsphere' });
+businessSchema.index({ ownerId: 1 });
+businessSchema.index({ isBlocked: 1 });
+
+// // Pre-save hook to update `updatedAt`
+// businessSchema.pre('save', function (next) {
+//   this.updatedAt = Date.now();
+//   next();
+// });
+
+// Sync verified with status
 businessSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
+  if (this.status === 'approved') this.verified = true;
+  if (this.status === 'rejected' || this.status === 'pending') this.verified = false;
   next();
 });
 
-// Generate JWT for authentication
-// businessSchema.methods.generateAuthToken = function () {
-//   const token = jwt.sign({ _id: this._id, role:this.role }, process.env.JWT_SECRET, { expiresIn: '24h' })
-//   console.log("businessModel:",token);
-  
-//   return token
-// }
 
 const Business = mongoose.model('Business', businessSchema);
-
 module.exports = Business;

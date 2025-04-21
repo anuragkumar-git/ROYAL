@@ -26,19 +26,26 @@ const authenticateUser = async (req, res, next) => {
     // Verify the token using the secret key
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+// console.log('authmiddleware', decoded);
 
     // Check if user or business exists in the database
     let account;
     if (decoded.role === 'user' || decoded.role === 'admin') {
       account = await User.findById(decoded._id);
     } else if (decoded.role === 'business') {
+      // console.log('hii');
+      
       account = await Business.findById(decoded._id)
+      // console.log('account', account);
+      
     }
 
     if (!account) {
       return res.status(401).json({ message: 'authMiddleware:\nAccount not found' })
     }
     req.user = decoded
+    // console.log('req.user',req.user);
+    
     // Proceed to the next middleware or controller
     next();
   } catch (error) {

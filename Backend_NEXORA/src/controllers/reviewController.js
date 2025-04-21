@@ -11,32 +11,34 @@ const User = require('../models/userModel');
 // ----------------------------
 const addReview = async (req, res) => {
   try {
+    const userId = req.user._id;
     const { dealId, rating, comment } = req.body;
-
 
     // Validate deal existence
     const deal = await Deal.findById(dealId);
 
+    // if (!deal || deal.dealStatus !== 'active' || !deal.verified) {
     if (!deal || !deal.isActive) {
-      return res.status(404).json({ message: 'Deal not found or inactive' });
+      return res.status(400).json({ success: false, message: 'Invalid or inactive deal' });
     }
 
     // Check if user already reviewed the deal
-    const existingReview = await Review.findOne({ dealId, userId: req.user._id });
+    const existingReview = await Review.findOne({ dealId, userId });
     if (existingReview) {
-      return res.status(400).json({ message: 'You have already reviewed this deal' });
+      return res.status(400).json({ success: false, message: 'Review already submitted' });
     }
 
     // Create new review
     const newReview = new Review({
       dealId,
-      userId: req.user._id,
+      userId,
       rating,
       comment,
     });
 
     await newReview.save();
 
+    console.log(`Review created by user ${userId} for deal ${dealId}`);
     const result = await User.updateOne(
       { _id: req.user._id },
       { $addToSet: { reviewHistory: newReview._id } }
@@ -46,10 +48,11 @@ const addReview = async (req, res) => {
       // console.log("Review not found or already removed.");
       return res.status(500).json({ message: "No matching review to remove" });
     }
-    res.status(201).json({ message: 'Review added successfully', review: newReview });
+    res.status(201).json({ success: true, message: 'Review submitted successfully', newReview });
 
   } catch (error) {
-    res.status(500).json({ message: `Error adding review: ${error.message}` });
+    console.error('createReview:', error);
+    res.status(500).json({ success: false, message: 'Error creating review', error: error.message });
   }
 };
 
@@ -134,15 +137,17 @@ const getDealReviews = async (req, res) => {
 
     const reviews = await Review.find({ dealId })
       .populate('userId', 'name')
-      .sort({ createdAt: -1 }); // Latest reviews first
+      .sort({ createdAt: -1 })
+      .lean();; // Latest reviews first
 
     if (!reviews || reviews.length === 0) {
       return res.status(404).json({ message: 'No reviews found for this deal' });
     }
 
-    res.status(200).json(reviews);
+    res.status(200).json({ success: true, data: reviews });
   } catch (error) {
-    res.status(500).json({ message: `Error fetching reviews: ${error.message}` });
+    console.error('getDealReviews:', error);
+    res.status(500).json({ success: false, message: 'Error fetching reviews', error: error.message });
   }
 };
 

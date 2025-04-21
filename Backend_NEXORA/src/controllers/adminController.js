@@ -3,7 +3,6 @@ const Business = require('../models/businessModel');
 const Deal = require('../models/dealModel');
 const Review = require('../models/reviewModel');
 const ReportedDeal = require('../models/reportedDeals');
-const AdminActivity = require('../models/adminActivityModel')
 
 const getDashboardStats = async (req, res) => {
   try {
@@ -13,13 +12,9 @@ const getDashboardStats = async (req, res) => {
     const totalDeals = await Deal.countDocuments();
     const totalReviews = await Review.countDocuments();
     const reportedDeals = await ReportedDeal.countDocuments();
-    
-    // Count active deals
-    const activeDeals = await Deal.countDocuments({ isActive: true });
-
-    // Count blocked users and businesses
-    // const blockedUsers = await User.countDocuments({ status: 'blocked' });
-    // const blockedBusinesses = await Business.countDocuments({ status: 'blocked' });
+    const blockedUsers = await User.countDocuments({ isBlocked: true });
+    const blockedBusinesses = await Business.countDocuments({ isBlocked: true });
+    const activeDeals = await Deal.countDocuments({ isActive: true }); // Count active deals
 
     // Return stats
     res.status(200).json({
@@ -30,13 +25,14 @@ const getDashboardStats = async (req, res) => {
         totalDeals,
         totalReviews,
         activeDeals,
-        reportedDeals
-        // blockedUsers,
-        // blockedBusinesses
+        reportedDeals,
+        blockedUsers,
+        blockedBusinesses
       }
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: `Error fetching stats: ${error.message}` });
+    console.error('getDashboardStats:', error);
+    res.status(500).json({ success: false, message: 'Error fetching stats', error: error.message });
   }
 };
 
@@ -48,10 +44,26 @@ const getDashboardStats = async (req, res) => {
  */
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({role:'user'}).select('-password -createdAt -updatedAt -preferences'); // Exclude password for security
-    res.status(200).json(users);
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const users = await User.find({ role: 'user' })
+      .select('-password -updatedAt -preferences')
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();; // Exclude password for security
+
+    const total = await User.countDocuments({ role: 'user' });
+    res.status(200).json({
+      success: true,
+      data: users,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+    });
   } catch (error) {
-    res.status(500).json({ message: `Error fetching users: ${error.message}` });
+    console.error('getAllUsers:', error);
+    res.status(500).json({ success: false, message: 'Error fetching users', error: error.message });
   }
 };
 
@@ -62,10 +74,32 @@ const getAllUsers = async (req, res) => {
  */
 const getAllBusinesses = async (req, res) => {
   try {
-    const businesses = await Business.find().select('-createdAt -updatedAt');
-    res.status(200).json(businesses);
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Find businesses
+    // Query: Finds Business documents with pagination
+    const businesses = await Business.find()
+      .select('-updatedAt')
+      .populate('ownerId', 'name')
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    // Count total
+    // Query: Counts Business documents
+    const total = await Business.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      data: businesses,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+    });
   } catch (error) {
-    res.status(500).json({ message: `Error fetching businesses: ${error.message}` });
+    console.error('getAllBusinesses:', error);
+    res.status(500).json({ success: false, message: 'Error fetching businesses', error: error.message });
   }
 };
 
@@ -76,12 +110,13 @@ const getAllBusinesses = async (req, res) => {
  */
 const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select('-password');
+    const user = await User.findById(req.params.id).select('-password').lean();
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.status(200).json(user);
+    res.status(200).json({ success: true, data: user });
   } catch (error) {
+    console.error('getUserById:', error);
     res.status(500).json({ message: `Error fetching user: ${error.message}` });
   }
 };
@@ -93,13 +128,14 @@ const getUserById = async (req, res) => {
  */
 const getBusinessById = async (req, res) => {
   try {
-    const business = await Business.findById(req.params.id);
+    const business = await Business.findById(req.params.id).populate('ownerId', 'name').lean();
     if (!business) {
-      return res.status(404).json({ message: 'Business not found' });
+      return res.status(404).json({ success: false, message: 'Business not found' });
     }
-    res.status(200).json(business);
+    res.status(200).json({ success: true, data: business });
   } catch (error) {
-    res.status(500).json({ message: `Error fetching business: ${error.message}` });
+    console.error('getBusinessById:', error);
+    res.status(500).json({ success: false, message: 'Error fetching business', error: error.message });
   }
 };
 
@@ -110,6 +146,10 @@ const getBusinessById = async (req, res) => {
  */
 const toggleUserBlock = async (req, res) => {
   try {
+    // Prevent self-blocking
+    if (req.params.id === req.user._id.toString()) {
+      return res.status(400).json({ success: false, message: 'Cannot block own admin account' });
+    }
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -118,9 +158,13 @@ const toggleUserBlock = async (req, res) => {
     user.isBlocked = !user.isBlocked;
     await user.save();
 
-    res.status(200).json({ message: `User ${user.isBlocked ? 'blocked' : 'unblocked'} successfully` });
+    res.status(200).json({
+      success: true,
+      message: `User ${user.isBlocked ? 'blocked' : 'unblocked'} successfully`,
+    })
   } catch (error) {
-    res.status(500).json({ message: `Error updating user status: ${error.message}` });
+    console.error('toggleUserBlock:', error);
+    res.status(500).json({ success: false, message: 'Error updating user status', error: error.message });
   }
 };
 
@@ -139,9 +183,153 @@ const toggleBusinessBlock = async (req, res) => {
     business.isBlocked = !business.isBlocked;
     await business.save();
 
-    res.status(200).json({ message: `Business ${business.isBlocked ? 'blocked' : 'unblocked'} successfully` });
+    res.status(200).json({
+      success: true,
+      message: `Business ${business.isBlocked ? 'blocked' : 'unblocked'} successfully`,
+    });
   } catch (error) {
-    res.status(500).json({ message: `Error updating business status: ${error.message}` });
+    console.error('toggleBusinessBlock:', error);
+    res.status(500).json({ success: false, message: 'Error updating business status', error: error.message });
+  }
+};
+
+// Approve Business
+const approveBusiness = async (req, res) => {
+  try {
+    const { businessId, status } = req.body;
+    if (!['approved', 'rejected'].includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid status' });
+    }
+
+    // Find business
+    // Query: Finds one Business document by _id
+    const business = await Business.findById(businessId);
+    if (!business) {
+      return res.status(404).json({ success: false, message: 'Business not found' });
+    }
+
+    // Update status
+    business.status = status;
+    // Query: Updates Business document
+    await business.save();
+
+  
+    res.status(200).json({ success: true, message: `Business ${status} successfully` });
+  } catch (error) {
+    console.error('approveBusiness:', error);
+    res.status(500).json({ success: false, message: 'Error approving business', error: error.message });
+  }
+};
+
+// // Approve Deal
+// const approveDeal = async (req, res) => {
+//   try {
+//     const { dealId, status } = req.body;
+//     if (!['active', 'rejected'].includes(status)) {
+//       return res.status(400).json({ success: false, message: 'Invalid status' });
+//     }
+
+//     // Find deal
+//     // Query: Finds one Deal document by _id
+//     const deal = await Deal.findById(dealId);
+//     if (!deal) {
+//       return res.status(404).json({ success: false, message: 'Deal not found' });
+//     }
+
+//     // Update deal
+//     deal.dealStatus = status;
+//     deal.verified = status === 'active';
+//     // Query: Updates Deal document
+//     await deal.save();
+
+//     // Log activity
+//     // Query: Saves new AdminActivity document
+//     await AdminActivity.create({
+//       adminId: req.user._id,
+//       action: `Deal ${status}`,
+//       targetId: dealId,
+//     });
+
+//     res.status(200).json({ success: true, message: `Deal ${status} successfully` });
+//   } catch (error) {
+//     console.error('approveDeal:', error);
+//     res.status(500).json({ success: false, message: 'Error approving deal', error: error.message });
+//   }
+// };
+// Get Reported Deals
+const getReportedDeals = async (req, res) => {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    // Find reported deals
+    // Query: Finds ReportedDeal documents with pagination
+    const reportedDeals = await ReportedDeal.find()
+      .populate('dealId', 'title')
+      .populate('userId', 'name')
+      .skip(skip)
+      .limit(parseInt(limit))
+      .lean();
+
+    // Count total
+    // Query: Counts ReportedDeal documents
+    const total = await ReportedDeal.countDocuments();
+
+    res.status(200).json({
+      success: true,
+      data: reportedDeals,
+      total,
+      page: parseInt(page),
+      pages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    console.error('getReportedDeals:', error);
+    res.status(500).json({ success: false, message: 'Error fetching reported deals', error: error.message });
+  }
+};
+
+// Resolve Reported Deal
+const resolveReportedDeal = async (req, res) => {
+  try {
+    const { reportId, action } = req.body; // action: 'dismiss', 'reject'
+
+    if (!['dismiss', 'reject'].includes(action)) {
+      return res.status(400).json({ success: false, message: 'Invalid action' });
+    }
+
+    // Find report
+    // Query: Finds one ReportedDeal document by _id
+    const report = await ReportedDeal.findById(reportId).populate('dealId');
+    if (!report) {
+      return res.status(404).json({ success: false, message: 'Report not found' });
+    }
+
+    if (action === 'reject') {
+      // Update deal
+      // Query: Updates Deal document
+      const deal = report.dealId;
+      // deal.dealStatus = 'rejected';
+      // deal.verified = false;
+      deal.isActive = false;
+      await deal.save();
+    }
+
+    // Delete report
+    // Query: Deletes one ReportedDeal document
+    await ReportedDeal.deleteOne({ _id: reportId });
+
+    // // Log activity
+    // // Query: Saves new AdminActivity document
+    // await AdminActivity.create({
+    //   adminId: req.user._id,
+    //   action: `Reported deal ${action}ed`,
+    //   targetId: report.dealId._id,
+    // });
+
+    res.status(200).json({ success: true, message: `Report ${action}ed successfully` });
+  } catch (error) {
+    console.error('resolveReportedDeal:', error);
+    res.status(500).json({ success: false, message: 'Error resolving report', error: error.message });
   }
 };
 
@@ -152,6 +340,9 @@ module.exports = {
   getUserById,
   getBusinessById,
   toggleUserBlock,
-  toggleBusinessBlock
+  toggleBusinessBlock,
+  approveBusiness,
+  getReportedDeals,
+  resolveReportedDeal
 };
 
